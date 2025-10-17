@@ -46,7 +46,7 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
   }, [organizations]);
 
   const filteredAndSortedOrgs = useMemo(() => {
-    let filtered = organizations.filter(org => {
+    const filtered = organizations.filter(org => {
       // Search filter
       if (searchTerm && !org.name.toLowerCase().includes(searchTerm.toLowerCase())) {
         return false;

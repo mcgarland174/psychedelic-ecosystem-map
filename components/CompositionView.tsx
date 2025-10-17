@@ -125,7 +125,7 @@ export default function CompositionView({ organizations, onOrgClick }: Compositi
         </div>
 
         <div className="space-y-3">
-          {roleData.map(({ role, count, percentage, orgIds }) => {
+          {roleData.map(({ role, count, percentage }) => {
             const previewOrgs = organizations.filter(org => org.ecosystemRole?.includes(role)).slice(0, 3);
             const remainingCount = count - 3;
 

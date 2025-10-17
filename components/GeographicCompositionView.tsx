@@ -93,8 +93,6 @@ export default function GeographicCompositionView({ organizations, onOrgClick }:
     });
   }, [organizations, stateData]);
 
-  const maxCount = stateData[0]?.count || 1;
-
   // Heatmap data: Role x State matrix
   const heatmapData = useMemo(() => {
     const topStates = stateData.slice(0, 10).map(d => d.state);
