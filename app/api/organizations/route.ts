@@ -8,7 +8,14 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching organizations:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch organizations' },
+      {
+        error: 'Failed to fetch organizations',
+        details: error instanceof Error ? error.message : String(error),
+        env: {
+          hasApiKey: !!process.env.AIRTABLE_API_KEY,
+          hasBaseId: !!process.env.AIRTABLE_BASE_ID
+        }
+      },
       { status: 500 }
     );
   }
