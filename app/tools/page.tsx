@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import FocusTrap from 'focus-trap-react';
 import CompositionView from '@/components/CompositionView';
 import GeographicCompositionView from '@/components/GeographicCompositionView';
@@ -10,6 +11,12 @@ import OrgDetailPanel from '@/components/OrgDetailPanel';
 import ProjectsSection from '@/components/ProjectsSection';
 import ProjectDetailPanel from '@/components/ProjectDetailPanel';
 import TermTooltip from '@/components/TermTooltip';
+import ChangePathways from '@/components/TheoryOfChange/ChangePathways';
+import FrameworkExplorer from '@/components/TheoryOfChange/FrameworkExplorer';
+import type { AppWorldview, AppOutcome, AppProblem, AppProblemCategory, AppProject } from '@/lib/data-transformer';
+
+// Top-level section types for combined navigation
+type TopSection = 'story' | 'change-pathways' | 'framework-explorer' | 'ecosystem-map';
 
 interface Organization {
   id: string;
@@ -26,7 +33,15 @@ interface Organization {
   verified?: boolean;
 }
 
-export default function Home() {
+function ToolsPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Top-level section state (new layer)
+  const initialTopSection = (searchParams.get('section') as TopSection) || 'ecosystem-map';
+  const [topSection, setTopSection] = useState<TopSection>(initialTopSection);
+
+  // Original ecosystem map state (preserved exactly)
   const [activeSection, setActiveSection] = useState<'organizations' | 'projects'>('organizations');
   const [transitionDirection, setTransitionDirection] = useState<'left' | 'right'>('right');
   const [orgView, setOrgView] = useState<'grouped' | 'geographic' | 'table'>('grouped');
@@ -38,12 +53,30 @@ export default function Home() {
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
+  // Theory of Change data state
+  const [tocData, setTocData] = useState<{
+    worldviews: AppWorldview[];
+    outcomes: AppOutcome[];
+    problems: AppProblem[];
+    problemCategories: AppProblemCategory[];
+    projects: AppProject[];
+  } | null>(null);
+  const [tocLoading, setTocLoading] = useState(false);
+  const [tocError, setTocError] = useState<string | null>(null);
+
+  // Handle top-level section changes with URL update
+  const handleTopSectionChange = (section: TopSection) => {
+    setTopSection(section);
+    router.push(`/tools?section=${section}`, { scroll: false });
+  };
+
   // Airtable form URLs
   const SUBMIT_ORG_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pag7exiNQcO65VQvk/form'; // For submitting new organizations
   const SUBMIT_PROJECT_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pageM5eDaUnswgwAN/form'; // For submitting new projects
   const EDIT_ORG_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pag7ssRGDlHJylwFr/form'; // For editing existing organizations
   const EDIT_PROJECT_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pag6Qb3syeGlCDUni/form'; // For editing existing projects
 
+  // Fetch ecosystem map data
   useEffect(() => {
     async function fetchData() {
       try {
@@ -73,6 +106,30 @@ export default function Home() {
 
     fetchData();
   }, []);
+
+  // Fetch Theory of Change data when user navigates to change-pathways or framework-explorer
+  useEffect(() => {
+    if ((topSection === 'change-pathways' || topSection === 'framework-explorer') && !tocData && !tocLoading) {
+      async function fetchTocData() {
+        setTocLoading(true);
+        try {
+          const response = await fetch('/api/data');
+          if (!response.ok) throw new Error('Failed to fetch Theory of Change data');
+
+          const data = await response.json();
+          setTocData(data);
+          setTocError(null);
+        } catch (error) {
+          console.error('Error fetching Theory of Change data:', error);
+          setTocError('Unable to load Theory of Change data. Please try again.');
+        } finally {
+          setTocLoading(false);
+        }
+      }
+
+      fetchTocData();
+    }
+  }, [topSection, tocData, tocLoading]);
 
   // Handle Escape key for modals
   useEffect(() => {
@@ -132,11 +189,70 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
-      {/* Decorative Top Bar */}
-      <div className="h-1.5 bg-gradient-to-r from-teal-600 to-teal-500" />
+      {/* Top-Level Navigation (New Layer) */}
+      <div className="bg-white border-b" style={{ borderColor: '#E6DED0' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
+          <div className="flex justify-center gap-3">
+            <button
+              onClick={() => handleTopSectionChange('story')}
+              className={`px-6 py-3 rounded-full font-medium text-base transition-all duration-200
+                ${topSection === 'story' ? 'text-white shadow-md' : 'bg-white hover:bg-gray-50'}`}
+              style={{
+                backgroundColor: topSection === 'story' ? '#4A7C7E' : undefined,
+                color: topSection !== 'story' ? '#2B1810' : undefined,
+                border: topSection !== 'story' ? '1px solid #E6DED0' : undefined
+              }}
+            >
+              Story Mode
+            </button>
+            <button
+              onClick={() => handleTopSectionChange('change-pathways')}
+              className={`px-6 py-3 rounded-full font-medium text-base transition-all duration-200
+                ${topSection === 'change-pathways' ? 'text-white shadow-md' : 'bg-white hover:bg-gray-50'}`}
+              style={{
+                backgroundColor: topSection === 'change-pathways' ? '#4A7C7E' : undefined,
+                color: topSection !== 'change-pathways' ? '#2B1810' : undefined,
+                border: topSection !== 'change-pathways' ? '1px solid #E6DED0' : undefined
+              }}
+            >
+              Change Pathways
+            </button>
+            <button
+              onClick={() => handleTopSectionChange('framework-explorer')}
+              className={`px-6 py-3 rounded-full font-medium text-base transition-all duration-200
+                ${topSection === 'framework-explorer' ? 'text-white shadow-md' : 'bg-white hover:bg-gray-50'}`}
+              style={{
+                backgroundColor: topSection === 'framework-explorer' ? '#4A7C7E' : undefined,
+                color: topSection !== 'framework-explorer' ? '#2B1810' : undefined,
+                border: topSection !== 'framework-explorer' ? '1px solid #E6DED0' : undefined
+              }}
+            >
+              Framework Explorer
+            </button>
+            <button
+              onClick={() => handleTopSectionChange('ecosystem-map')}
+              className={`px-6 py-3 rounded-full font-medium text-base transition-all duration-200
+                ${topSection === 'ecosystem-map' ? 'text-white shadow-md' : 'bg-white hover:bg-gray-50'}`}
+              style={{
+                backgroundColor: topSection === 'ecosystem-map' ? '#4A7C7E' : undefined,
+                color: topSection !== 'ecosystem-map' ? '#2B1810' : undefined,
+                border: topSection !== 'ecosystem-map' ? '1px solid #E6DED0' : undefined
+              }}
+            >
+              Ecosystem Map
+            </button>
+          </div>
+        </div>
+      </div>
 
-      {/* Hero Header */}
-      <header className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F7F0E8 0%, #FFFFFF 100%)' }}>
+      {/* ECOSYSTEM MAP SECTION (100% Original) */}
+      {topSection === 'ecosystem-map' && (
+        <>
+          {/* Decorative Top Bar */}
+          <div className="h-1.5 bg-gradient-to-r from-teal-600 to-teal-500" />
+
+          {/* Hero Header */}
+          <header className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F7F0E8 0%, #FFFFFF 100%)' }}>
         {/* Hero Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 pb-0">
           <div className="text-center mb-8">
@@ -475,6 +591,123 @@ export default function Home() {
           </div>
         </FocusTrap>
       )}
+
+      {/* End of Ecosystem Map Section */}
+      </>
+      )}
+
+      {/* OTHER SECTIONS (Placeholders) */}
+      {topSection === 'story' && (
+        <main className="flex-1 flex items-center justify-center p-16">
+          <div className="bg-white rounded-3xl shadow-sm border p-16 text-center max-w-2xl" style={{ borderColor: '#E6DED0' }}>
+            <h2 className="text-4xl font-bold mb-4" style={{ color: '#2B1810' }}>Story Mode</h2>
+            <p className="text-base leading-relaxed" style={{ color: '#6B5B4F' }}>Coming Soon</p>
+          </div>
+        </main>
+      )}
+
+      {topSection === 'change-pathways' && (
+        <>
+          {tocLoading && (
+            <main className="flex-1 flex items-center justify-center p-16">
+              <div className="bg-white rounded-3xl shadow-sm border p-16 text-center max-w-2xl" style={{ borderColor: '#E6DED0' }}>
+                <div className="animate-pulse">
+                  <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+                </div>
+                <p className="text-base mt-4" style={{ color: '#6B5B4F' }}>Loading Change Pathways...</p>
+              </div>
+            </main>
+          )}
+          {tocError && (
+            <main className="flex-1 flex items-center justify-center p-16">
+              <div className="bg-white rounded-3xl shadow-sm border p-16 text-center max-w-2xl" style={{ borderColor: '#E6DED0' }}>
+                <h2 className="text-4xl font-bold mb-4" style={{ color: '#2B1810' }}>Error</h2>
+                <p className="text-base leading-relaxed" style={{ color: '#6B5B4F' }}>{tocError}</p>
+                <button
+                  onClick={() => {
+                    setTocError(null);
+                    setTocData(null);
+                  }}
+                  className="mt-4 px-6 py-2 rounded-full font-medium transition-colors"
+                  style={{ backgroundColor: '#4A7C7E', color: 'white' }}
+                >
+                  Try Again
+                </button>
+              </div>
+            </main>
+          )}
+          {!tocLoading && !tocError && tocData && (
+            <ChangePathways
+              worldviews={tocData.worldviews}
+              outcomes={tocData.outcomes}
+              problems={tocData.problems}
+              problemCategories={tocData.problemCategories}
+              projects={tocData.projects}
+            />
+          )}
+        </>
+      )}
+
+      {topSection === 'framework-explorer' && (
+        <>
+          {tocLoading && (
+            <main className="flex-1 flex items-center justify-center p-16">
+              <div className="bg-white rounded-3xl shadow-sm border p-16 text-center max-w-2xl" style={{ borderColor: '#E6DED0' }}>
+                <div className="animate-pulse">
+                  <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+                </div>
+                <p className="text-base mt-4" style={{ color: '#6B5B4F' }}>Loading Framework Explorer...</p>
+              </div>
+            </main>
+          )}
+          {tocError && (
+            <main className="flex-1 flex items-center justify-center p-16">
+              <div className="bg-white rounded-3xl shadow-sm border p-16 text-center max-w-2xl" style={{ borderColor: '#E6DED0' }}>
+                <h2 className="text-4xl font-bold mb-4" style={{ color: '#2B1810' }}>Error</h2>
+                <p className="text-base leading-relaxed" style={{ color: '#6B5B4F' }}>{tocError}</p>
+                <button
+                  onClick={() => {
+                    setTocError(null);
+                    setTocData(null);
+                  }}
+                  className="mt-4 px-6 py-2 rounded-full font-medium transition-colors"
+                  style={{ backgroundColor: '#4A7C7E', color: 'white' }}
+                >
+                  Try Again
+                </button>
+              </div>
+            </main>
+          )}
+          {!tocLoading && !tocError && tocData && (
+            <FrameworkExplorer
+              worldviews={tocData.worldviews}
+              outcomes={tocData.outcomes}
+              problems={tocData.problems}
+              problemCategories={tocData.problemCategories}
+              projects={tocData.projects}
+            />
+          )}
+        </>
+      )}
     </div>
+  );
+}
+
+export default function ToolsPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#F5EFE7' }}>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="animate-pulse text-center">
+            <div className="h-8 w-48 bg-gray-200 rounded mx-auto mb-4"></div>
+            <div className="h-4 w-32 bg-gray-200 rounded mx-auto"></div>
+          </div>
+        </div>
+      </div>
+    }>
+      <ToolsPageContent />
+    </Suspense>
   );
 }

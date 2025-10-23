@@ -12,6 +12,12 @@ interface Organization {
   city?: string;
   state?: string[];
   country?: string[];
+  descriptionOfActivities?: string;
+  projects?: string[];
+  areaOfFocus?: string[];
+  substanceOfFocus?: string[];
+  populationServed?: string[];
+  verified?: boolean;
 }
 
 interface TableViewProps {
@@ -28,6 +34,7 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [filterRole, setFilterRole] = useState<string>('all');
   const [filterCountry, setFilterCountry] = useState<string>('all');
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const allRoles = useMemo(() => {
     const roles = new Set<string>();
@@ -122,96 +129,186 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
 
     if (sortDirection === 'asc') {
       return (
-        <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+        <svg className="w-4 h-4 text-[#007F6E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" />
         </svg>
       );
     }
 
     return (
-      <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      <svg className="w-4 h-4 text-[#007F6E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
       </svg>
     );
   };
 
+  const containerClasses = isFullscreen
+    ? "fixed inset-0 z-50 bg-[#F5EBDD] overflow-auto p-6 space-y-4"
+    : "space-y-4 px-8";
+
   return (
-    <div className="space-y-4">
+    <div className={containerClasses}>
       {/* Filters and Search */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Search
-            </label>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search by name..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+      <div className="bg-white rounded-xl shadow-md border-2 border-[#E9D5B8] p-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Search
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search by name..."
+                  className="w-full pl-12 pr-4 py-2.5 border-2 border-[#E9D5B8] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007F6E] focus:border-[#007F6E] transition-all hover:border-[#003B73]"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Ecosystem Role
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                  </svg>
+                </div>
+                <select
+                  value={filterRole}
+                  onChange={(e) => setFilterRole(e.target.value)}
+                  className="w-full pl-12 pr-4 py-2.5 border-2 border-[#E9D5B8] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007F6E] focus:border-[#007F6E] transition-all hover:border-[#003B73] appearance-none bg-white font-semibold text-gray-900"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1.25rem' }}
+                >
+                  <option value="all">All Roles</option>
+                  {allRoles.map(role => (
+                    <option key={role} value={role}>{role}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Country
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <select
+                  value={filterCountry}
+                  onChange={(e) => setFilterCountry(e.target.value)}
+                  className="w-full pl-12 pr-4 py-2.5 border-2 border-[#E9D5B8] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007F6E] focus:border-[#007F6E] transition-all hover:border-[#003B73] appearance-none bg-white font-semibold text-gray-900"
+                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1.25rem' }}
+                >
+                  <option value="all">All Countries</option>
+                  {allCountries.map(country => (
+                    <option key={country} value={country}>{country}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Ecosystem Role
-            </label>
-            <select
-              value={filterRole}
-              onChange={(e) => setFilterRole(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Roles</option>
-              {allRoles.map(role => (
-                <option key={role} value={role}>{role}</option>
-              ))}
-            </select>
+          <div className="mt-4 pt-4 border-t border-[#E9D5B8] flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="text-base font-semibold text-gray-900">
+                Showing <span className="font-bold text-[#007F6E]">{filteredAndSortedOrgs.length}</span> of <span className="font-bold text-[#007F6E]">{organizations.length}</span> organizations
+              </span>
+              {(searchTerm || filterRole !== 'all' || filterCountry !== 'all') && (
+                <span className="px-3 py-1.5 bg-gradient-to-r from-[#E6543E] to-[#A33D2C] text-white text-sm font-bold rounded-full shadow-sm animate-fadeIn">
+                  Filtered
+                </span>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setIsFullscreen(!isFullscreen)}
+                className="px-4 py-2 bg-[#003B73] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#003B73]/50 transition-all hover:scale-105 flex items-center gap-2"
+              >
+                {isFullscreen ? (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Exit Fullscreen
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                    Fullscreen
+                  </>
+                )}
+              </button>
+              {(searchTerm || filterRole !== 'all' || filterCountry !== 'all') && (
+                <button
+                  onClick={() => {
+                    setSearchTerm('');
+                    setFilterRole('all');
+                    setFilterCountry('all');
+                  }}
+                  className="px-4 py-2 bg-[#E6543E] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#E6543E]/50 transition-all hover:scale-105"
+                >
+                  Clear Filters
+                </button>
+              )}
+            </div>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Country
-            </label>
-            <select
-              value={filterCountry}
-              onChange={(e) => setFilterCountry(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Countries</option>
-              {allCountries.map(country => (
-                <option key={country} value={country}>{country}</option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
-          <span>Showing {filteredAndSortedOrgs.length} of {organizations.length} organizations</span>
-          {(searchTerm || filterRole !== 'all' || filterCountry !== 'all') && (
-            <button
-              onClick={() => {
-                setSearchTerm('');
-                setFilterRole('all');
-                setFilterCountry('all');
-              }}
-              className="text-blue-600 hover:text-blue-800 font-medium"
-            >
-              Clear Filters
-            </button>
-          )}
-        </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+      <div className="bg-white rounded-xl shadow-lg border-2 border-[#E9D5B8] overflow-hidden">
+        {filteredAndSortedOrgs.length === 0 ? (
+          /* Empty State */
+          <div className="flex flex-col items-center justify-center py-20 px-6">
+            <div className="w-24 h-24 mb-6 bg-gradient-to-br from-[#F5EBDD] to-[#F7DCC3] rounded-full flex items-center justify-center">
+              <svg className="w-12 h-12 text-[#003B73]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">No organizations found</h3>
+            <p className="text-gray-600 text-center max-w-md mb-6">
+              {searchTerm || filterRole !== 'all' || filterCountry !== 'all'
+                ? "No organizations match your current filters. Try adjusting your search criteria."
+                : "No organizations available to display."
+              }
+            </p>
+            {(searchTerm || filterRole !== 'all' || filterCountry !== 'all') && (
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setFilterRole('all');
+                  setFilterCountry('all');
+                }}
+                className="px-6 py-3 bg-gradient-to-r from-[#007F6E] to-[#003B73] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#007F6E]/30 transition-all hover:scale-105 flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Clear All Filters
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-[#E9D5B8]">
+              <thead className="bg-gradient-to-br from-[#F5EBDD] to-[#F7DCC3]">
               <tr>
                 <th
                   onClick={() => handleSort('name')}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider cursor-pointer hover:bg-[#F7DCC3] transition-colors"
                 >
                   <div className="flex items-center gap-2">
                     <span>Organization</span>
@@ -220,7 +317,7 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
                 </th>
                 <th
                   onClick={() => handleSort('role')}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider cursor-pointer hover:bg-[#F7DCC3] transition-colors"
                 >
                   <div className="flex items-center gap-2">
                     <span>Ecosystem Role</span>
@@ -229,7 +326,7 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
                 </th>
                 <th
                   onClick={() => handleSort('type')}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider cursor-pointer hover:bg-[#F7DCC3] transition-colors"
                 >
                   <div className="flex items-center gap-2">
                     <span>Type</span>
@@ -238,40 +335,65 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
                 </th>
                 <th
                   onClick={() => handleSort('location')}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider cursor-pointer hover:bg-[#F7DCC3] transition-colors"
                 >
                   <div className="flex items-center gap-2">
                     <span>Location</span>
                     <SortIcon field="location" />
                   </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider">
                   Website
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider">
+                  Entity Type
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider">
+                  Area of Focus
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider">
+                  Substance
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider">
+                  Population
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider">
+                  Description
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-[#000000] uppercase tracking-wider">
+                  Projects
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-[#E9D5B8]">
               {filteredAndSortedOrgs.map(org => (
                 <tr
                   key={org.id}
                   onClick={() => onOrgClick?.(org.id)}
-                  className="hover:bg-blue-50 cursor-pointer transition-colors"
+                  className="hover:bg-[#F5EBDD] cursor-pointer transition-all hover:shadow-md"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="font-medium text-gray-900">{org.name}</div>
+                    <div className="flex items-center gap-2">
+                      <div className="font-medium" style={{ color: '#2B180A' }}>{org.name}</div>
+                      {org.verified && (
+                        <svg className="w-5 h-5 text-teal-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" title="Verified Organization">
+                          <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex flex-wrap gap-1">
                       {org.ecosystemRole?.slice(0, 2).map((role, idx) => (
                         <span
                           key={idx}
-                          className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full"
+                          className="inline-block px-2.5 py-1 text-xs font-semibold bg-gradient-to-r from-[#F5EBDD] to-[#F7DCC3] text-[#000000] rounded-full border border-[#E9D5B8]"
                         >
                           {role}
                         </span>
                       ))}
                       {org.ecosystemRole && org.ecosystemRole.length > 2 && (
-                        <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">
+                        <span className="inline-block px-2.5 py-1 text-xs font-semibold bg-[#F5EBDD] text-[#000000] rounded-full border border-[#E9D5B8]">
                           +{org.ecosystemRole.length - 2}
                         </span>
                       )}
@@ -294,17 +416,48 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="text-blue-600 hover:text-blue-800 text-sm"
+                        className="text-[#E6543E] hover:text-[#007F6E] text-sm font-semibold transition-colors"
                       >
-                        Link
+                        Link →
                       </a>
                     )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {org.entityType || '-'}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">
+                      {org.areaOfFocus?.join(', ') || '-'}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">
+                      {org.substanceOfFocus?.join(', ') || '-'}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="text-sm text-gray-900">
+                      {org.populationServed?.join(', ') || '-'}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 max-w-xs">
+                    <div className="text-sm text-gray-900 truncate">
+                      {org.descriptionOfActivities || '-'}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {org.projects?.length || 0}
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        )}
       </div>
     </div>
   );

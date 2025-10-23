@@ -16,6 +16,13 @@ export interface Organization {
   country?: string[];
   affiliatedPeople?: string[];
   orgToOrgAffiliations?: string[];
+  showOnline?: string;
+  descriptionOfActivities?: string;
+  projects?: string[];
+  areaOfFocus?: string[];
+  substanceOfFocus?: string[];
+  populationServed?: string[];
+  verified?: boolean;
 }
 
 export interface OrgAffiliation {
@@ -39,8 +46,108 @@ export interface Project {
   id: string;
   name: string;
   description?: string;
-  affiliatedOrgs?: string[];
-  affiliatedPeople?: string[];
+  priorityArea?: string;
+  typeOfProject?: string[];
+  geographicLocation?: string[];
+  status?: string;
+  associatedOrganizations?: string[];
+  peopleInvolved?: string[];
+  teamLead?: string[];
+  activelyFundraising?: string;
+  amountRaisedToDate?: number;
+  amountSeeking?: number;
+  expectedAnnualRevenue?: string;
+  willGenerateRevenue?: string;
+  projectStartDate?: string;
+  expectedCompletionDate?: string;
+  sustainabilityTimeline?: string[];
+  currentProgress?: string;
+  describeCurrentProgress?: string;
+  projectMilestones?: string;
+  expectedImpact?: string;
+  website?: string;
+  projectFunders?: string;
+  addressedProblems?: string[];
+}
+
+// Theory of Change Interfaces
+export interface Worldview {
+  id: string;
+  worldviewId: string;
+  name: string;
+  shortName: string;
+  color?: string;
+  cluster?: string[];
+  clusterName?: string;
+  clusterDefinition?: string;
+  tagline?: string;
+  coreIdentity?: string;
+  description?: string;
+  vision?: string;
+  approach?: string;
+  strengths?: string;
+  tensions?: string;
+  naturalAllies?: string;
+  exampleOrganizations?: string;
+  status?: string;
+}
+
+export interface Cluster {
+  id: string;
+  clusterId: string;
+  clusterName: string;
+  clusterDefinition?: string;
+  worldviews?: string[];
+}
+
+export interface Outcome {
+  id: string;
+  outcomeId: string;
+  name: string;
+  shortDescription?: string;
+  description?: string;
+  successIndicators?: string;
+  relatedWorldviews?: string;
+  worldviewRelevance?: Record<string, string>; // Maps worldview ID to relevance level
+  status?: string;
+}
+
+export interface OutcomeWorldviewRelationship {
+  id: string;
+  outcomeId: string[];
+  worldviewId: string[];
+  relevance: string;
+}
+
+export interface ProblemCategory {
+  id: string;
+  categoryId: string;
+  problemCategoryName: string;
+  status?: string;
+  problems?: string[];
+}
+
+export interface Problem {
+  id: string;
+  problemId: string;
+  name: string;
+  description?: string;
+  problemCategory?: string[];
+  affectedOutcomes?: string[]; // Changed from string to string[]
+  projects?: string[];
+  status?: string;
+}
+
+export interface Program {
+  id: string;
+  name: string;
+  organizations?: string[];
+  programType?: string;
+  programDescription?: string;
+  programLength?: string;
+  stateProvince?: string[];
+  price?: number;
+  webpage?: string;
 }
 
 export async function getOrganizations(): Promise<Organization[]> {
@@ -59,24 +166,43 @@ export async function getOrganizations(): Promise<Organization[]> {
         'State / Province',
         'Country',
         'Affiliated People',
-        'Org to Org Affiliations'
+        'Org to Org Affiliations',
+        'Show Online',
+        'Description of Activities',
+        'Projects',
+        'Area of Focus',
+        'Substance of Focus',
+        'Population Served',
+        'Verified'
       ]
     })
     .eachPage((records, fetchNextPage) => {
       records.forEach((record) => {
-        orgs.push({
-          id: record.id,
-          name: record.get('Organization Name') as string || 'Unnamed Organization',
-          organizationType: record.get('Organization Type') as string[],
-          entityType: record.get('Entity Type') as string,
-          ecosystemRole: record.get('Ecosystem Role') as string[],
-          website: record.get('Website') as string,
-          city: record.get('City') as string,
-          state: record.get('State / Province') as string[],
-          country: record.get('Country') as string[],
-          affiliatedPeople: record.get('Affiliated People') as string[],
-          orgToOrgAffiliations: record.get('Org to Org Affiliations') as string[],
-        });
+        const showOnline = record.get('Show Online') as string;
+
+        // Only include orgs where Show Online is "yes" or blank (not "no")
+        if (showOnline?.toLowerCase() !== 'no') {
+          orgs.push({
+            id: record.id,
+            name: record.get('Organization Name') as string || 'Unnamed Organization',
+            organizationType: record.get('Organization Type') as string[],
+            entityType: record.get('Entity Type') as string,
+            ecosystemRole: record.get('Ecosystem Role') as string[],
+            website: record.get('Website') as string,
+            city: record.get('City') as string,
+            state: record.get('State / Province') as string[],
+            country: record.get('Country') as string[],
+            affiliatedPeople: record.get('Affiliated People') as string[],
+            orgToOrgAffiliations: record.get('Org to Org Affiliations') as string[],
+            showOnline: showOnline,
+            descriptionOfActivities: record.get('Description of Activities') as string,
+            projects: record.get('Projects') as string[],
+            areaOfFocus: record.get('Area of Focus') as string[],
+            substanceOfFocus: record.get('Substance of Focus') as string[],
+            populationServed: record.get('Population Served') as string[],
+            verified: record.get('Verified') as boolean,
+          });
+        }
       });
       fetchNextPage();
     });
@@ -149,16 +275,68 @@ export async function getProjects(): Promise<Project[]> {
     await base('Projects')
       .select({
         view: 'Grid view',
+        fields: [
+          'Project Name',
+          'Project Description',
+          'Priority Area',
+          'Type of Project',
+          'Geographic Location',
+          'Status',
+          'Associated Organization(s)',
+          'People Involved',
+          'Team Lead',
+          'Actively fundraising?',
+          'Amount raised to date',
+          'Amount seeking',
+          'Expected annual revenue',
+          'Will this project generate revenue?',
+          'Project Start Date',
+          'Expected Completion Date',
+          'Sustainability Timeline',
+          'Current Progress',
+          'Describe current progress',
+          'Project Milestones',
+          'Expected/target impact + metrics',
+          'Website',
+          'Project Funders',
+          'Show Online',
+          'Addressed Problems'
+        ]
       })
       .eachPage((records, fetchNextPage) => {
         records.forEach((record) => {
-          projects.push({
-            id: record.id,
-            name: record.get('Project Name') as string || record.get('Name') as string || 'Unnamed Project',
-            description: record.get('Description') as string,
-            affiliatedOrgs: record.get('Affiliated Organizations') as string[] || record.get('Organizations') as string[],
-            affiliatedPeople: record.get('Affiliated People') as string[] || record.get('People') as string[],
-          });
+          const showOnline = record.get('Show Online') as string;
+
+          // Only include projects where Show Online is "yes" or blank (not "no")
+          if (showOnline?.toLowerCase() !== 'no') {
+            projects.push({
+              id: record.id,
+              name: record.get('Project Name') as string || 'Unnamed Project',
+              description: record.get('Project Description') as string,
+              priorityArea: record.get('Priority Area') as string,
+              typeOfProject: record.get('Type of Project') as string[],
+              geographicLocation: record.get('Geographic Location') as string[],
+              status: record.get('Status') as string,
+              associatedOrganizations: record.get('Associated Organization(s)') as string[],
+              peopleInvolved: record.get('People Involved') as string[],
+              teamLead: record.get('Team Lead') as string[],
+              activelyFundraising: record.get('Actively fundraising?') as string,
+              amountRaisedToDate: record.get('Amount raised to date') as number,
+              amountSeeking: record.get('Amount seeking') as number,
+              expectedAnnualRevenue: record.get('Expected annual revenue') as string,
+              willGenerateRevenue: record.get('Will this project generate revenue?') as string,
+              projectStartDate: record.get('Project Start Date') as string,
+              expectedCompletionDate: record.get('Expected Completion Date') as string,
+              sustainabilityTimeline: record.get('Sustainability Timeline') as string[],
+              currentProgress: record.get('Current Progress') as string,
+              describeCurrentProgress: record.get('Describe current progress') as string,
+              projectMilestones: record.get('Project Milestones') as string,
+              expectedImpact: record.get('Expected/target impact + metrics') as string,
+              website: record.get('Website') as string,
+              projectFunders: record.get('Project Funders') as string,
+              addressedProblems: record.get('Addressed Problems') as string[],
+            });
+          }
         });
         fetchNextPage();
       });
@@ -167,6 +345,47 @@ export async function getProjects(): Promise<Project[]> {
   }
 
   return projects;
+}
+
+export async function getPrograms(): Promise<Program[]> {
+  const programs: Program[] = [];
+
+  try {
+    await base('Programs')
+      .select({
+        view: 'Grid view',
+        fields: [
+          'Name',
+          'Organizations',
+          'Program Type',
+          'Program description',
+          'Program length',
+          'State/Province',
+          'Price',
+          'Webpage'
+        ]
+      })
+      .eachPage((records, fetchNextPage) => {
+        records.forEach((record) => {
+          programs.push({
+            id: record.id,
+            name: record.get('Name') as string || 'Unnamed Program',
+            organizations: record.get('Organizations') as string[],
+            programType: record.get('Program Type') as string,
+            programDescription: record.get('Program description') as string,
+            programLength: record.get('Program length') as string,
+            stateProvince: record.get('State/Province') as string[],
+            price: record.get('Price') as number,
+            webpage: record.get('Webpage') as string,
+          });
+        });
+        fetchNextPage();
+      });
+  } catch (error) {
+    console.error('Error fetching programs:', error);
+  }
+
+  return programs;
 }
 
 export interface NetworkData {
@@ -224,4 +443,224 @@ function getColorForRole(role?: string): string {
   };
 
   return colorMap[role || ''] || '#9CA3AF';
+}
+
+// Theory of Change Data Fetching
+
+export async function getWorldviews(): Promise<Worldview[]> {
+  const worldviews: Worldview[] = [];
+
+  try {
+    console.log('[getWorldviews] Starting fetch...');
+    await base('Worldviews')
+      .select({
+        view: 'Grid view',
+      })
+      .eachPage(function page(records, fetchNextPage) {
+        console.log(`[getWorldviews] Processing ${records.length} records`);
+        records.forEach((record) => {
+          worldviews.push({
+            id: record.id,
+            worldviewId: record.get('Worldview ID') as string,
+            name: record.get('Name') as string,
+            shortName: record.get('Short Name') as string,
+            color: record.get('Color') as string,
+            cluster: record.get('Cluster') as string[],
+            clusterName: record.get('Cluster Name') as string,
+            clusterDefinition: record.get('Cluster Definition') as string,
+            tagline: record.get('Tagline') as string,
+            coreIdentity: record.get('Core Identity') as string,
+            description: record.get('Description') as string,
+            vision: record.get('Vision') as string,
+            approach: record.get('Approach') as string,
+            strengths: record.get('Strengths') as string,
+            tensions: record.get('Tensions') as string,
+            naturalAllies: record.get('Natural Allies') as string,
+            exampleOrganizations: record.get('Example Organizations') as string,
+            status: record.get('Status') as string,
+          });
+        });
+        fetchNextPage();
+      });
+    console.log(`[getWorldviews] Complete. Fetched ${worldviews.length} worldviews`);
+  } catch (error) {
+    console.error('[getWorldviews] Error fetching worldviews:', error);
+    throw error;
+  }
+
+  return worldviews;
+}
+
+export async function getClusters(): Promise<Cluster[]> {
+  const clusters: Cluster[] = [];
+
+  try {
+    await base('Worldview Clusters')
+      .select({
+        view: 'Grid view',
+      })
+      .eachPage((records, fetchNextPage) => {
+        records.forEach((record) => {
+          clusters.push({
+            id: record.id,
+            clusterId: record.get('Cluster ID') as string,
+            clusterName: record.get('Cluster Name') as string,
+            clusterDefinition: record.get('Cluster Definition') as string,
+            worldviews: record.get('Worldviews') as string[],
+          });
+        });
+        fetchNextPage();
+      });
+  } catch (error) {
+    console.error('Error fetching clusters:', error);
+  }
+
+  return clusters;
+}
+
+export async function getOutcomes(): Promise<Outcome[]> {
+  const outcomes: Outcome[] = [];
+
+  try {
+    await base('Outcomes')
+      .select({
+        view: 'Grid view',
+      })
+      .eachPage((records, fetchNextPage) => {
+        records.forEach((record) => {
+          outcomes.push({
+            id: record.id,
+            outcomeId: record.get('Outcome ID') as string,
+            name: record.get('Name') as string,
+            shortDescription: record.get('Short Description') as string,
+            description: record.get('Description') as string,
+            successIndicators: record.get('Success Indicators') as string,
+            relatedWorldviews: record.get('Related Worldviews') as string,
+            status: record.get('Status') as string,
+          });
+        });
+        fetchNextPage();
+      });
+  } catch (error) {
+    console.error('Error fetching outcomes:', error);
+  }
+
+  return outcomes;
+}
+
+export async function getProblemCategories(): Promise<ProblemCategory[]> {
+  const categories: ProblemCategory[] = [];
+
+  try {
+    await base('Problem Categories')
+      .select({
+        view: 'Grid view',
+      })
+      .eachPage((records, fetchNextPage) => {
+        records.forEach((record) => {
+          const catName = record.get('Problem_category_name') as string;
+
+          categories.push({
+            id: record.id,
+            categoryId: record.get('Category ID') as string,
+            problemCategoryName: catName,
+            status: record.get('Status') as string,
+            problems: record.get('Problems') as string[],
+          });
+        });
+        fetchNextPage();
+      });
+  } catch (error) {
+    console.error('Error fetching problem categories:', error);
+  }
+
+  return categories;
+}
+
+export async function getProblems(): Promise<Problem[]> {
+  const problems: Problem[] = [];
+
+  try {
+    await base('Problems')
+      .select({
+        view: 'Grid view',
+      })
+      .eachPage((records, fetchNextPage) => {
+        records.forEach((record) => {
+          problems.push({
+            id: record.id,
+            problemId: record.get('Problem ID') as string,
+            name: record.get('Name') as string,
+            description: record.get('Description') as string,
+            problemCategory: record.get('Problem Categories') as string[],
+            affectedOutcomes: record.get('affectedOutcomes') as string[],
+            projects: record.get('Projects') as string[],
+            status: record.get('Status') as string,
+          });
+        });
+        fetchNextPage();
+      });
+  } catch (error) {
+    console.error('Error fetching problems:', error);
+  }
+
+  return problems;
+}
+
+// Fetch Outcome-Worldview Relationships
+export async function getOutcomeWorldviewRelationships(): Promise<OutcomeWorldviewRelationship[]> {
+  const relationships: OutcomeWorldviewRelationship[] = [];
+
+  try {
+    await base('Outcome-Worldview Relationships')
+      .select({
+        view: 'Grid view',
+      })
+      .eachPage((records, fetchNextPage) => {
+        records.forEach((record) => {
+          relationships.push({
+            id: record.id,
+            outcomeId: record.get('Outcomes') as string[],
+            worldviewId: record.get('Worldviews') as string[],
+            relevance: record.get('Relevance') as string,
+          });
+        });
+        fetchNextPage();
+      });
+  } catch (error) {
+    console.error('Error fetching outcome-worldview relationships:', error);
+  }
+
+  return relationships;
+}
+
+// Helper function to enrich outcomes with worldview relevance data
+export async function getOutcomesWithRelevance(): Promise<Outcome[]> {
+  const [outcomes, relationships] = await Promise.all([
+    getOutcomes(),
+    getOutcomeWorldviewRelationships()
+  ]);
+
+  // Build a map of outcome ID -> worldview relevance
+  const relevanceMap = new Map<string, Record<string, string>>();
+
+  relationships.forEach(rel => {
+    if (rel.outcomeId && rel.outcomeId[0] && rel.worldviewId && rel.worldviewId[0]) {
+      const outcomeId = rel.outcomeId[0];
+      const worldviewId = rel.worldviewId[0];
+
+      if (!relevanceMap.has(outcomeId)) {
+        relevanceMap.set(outcomeId, {});
+      }
+
+      const outcomeRelevance = relevanceMap.get(outcomeId)!;
+      outcomeRelevance[worldviewId] = rel.relevance;
+    }
+  });
+
+  // Enrich outcomes with relevance data
+  return outcomes.map(outcome => ({
+    ...outcome,
+    worldviewRelevance: relevanceMap.get(outcome.id) || {}
+  }));
 }
