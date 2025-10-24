@@ -408,7 +408,7 @@ export default function ChangePathways({
   }, [showOutcomes, showProblems, showProjects]); // Re-attach listeners when columns appear
 
   return (
-    <section className="min-h-screen px-4 py-20" style={{ backgroundColor: LIGHT_BACKGROUNDS.primary, zoom: 0.85 }}>
+    <section className="min-h-screen px-4 py-20" style={{ backgroundColor: LIGHT_BACKGROUNDS.primary }}>
       {/* Help Bar */}
       <div className="w-full mx-auto px-[10%] mb-8">
         <button
