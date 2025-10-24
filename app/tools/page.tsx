@@ -254,12 +254,12 @@ function ToolsPageContent() {
           {/* Hero Header */}
           <header className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F7F0E8 0%, #FFFFFF 100%)' }}>
         {/* Hero Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 pb-0">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 pb-0">
           <div className="text-center mb-8">
-            <h1 className="text-5xl md:text-7xl font-bold mb-4 animate-slideUp" style={{ color: '#2B180A' }}>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 animate-slideUp" style={{ color: '#2B180A' }}>
               Psychedelic Ecosystem Map
             </h1>
-            <div className="text-base md:text-xl max-w-3xl mx-auto mb-8 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.6' }}>
+            <div className="text-sm md:text-base lg:text-lg max-w-3xl mx-auto mb-8 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.6' }}>
               Explore the interconnected network of <span className="inline-flex items-center gap-1"><span>organizations</span><TermTooltip term="ecosystem-role" iconSize={18} /></span>, projects, and programs
               shaping the future of psychedelic research and therapy
             </div>
@@ -270,7 +270,7 @@ function ToolsPageContent() {
 
       {/* Main Content */}
       <main className="flex-1">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Tab Container */}
           <div className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-shadow overflow-hidden border-2" style={{ borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.15), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
             {/* Tab Navigation */}
