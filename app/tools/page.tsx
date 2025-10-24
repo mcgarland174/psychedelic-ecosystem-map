@@ -254,13 +254,13 @@ function ToolsPageContent() {
           {/* Hero Header */}
           <header className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F7F0E8 0%, #FFFFFF 100%)' }}>
         {/* Hero Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-0">
-          <div className="text-center mb-6">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 animate-slideUp" style={{ color: '#2B180A' }}>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 pb-0">
+          <div className="text-center mb-4">
+            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 animate-slideUp" style={{ color: '#2B180A' }}>
               Psychedelic Ecosystem Map
             </h1>
-            <div className="text-xs md:text-sm lg:text-base max-w-2xl mx-auto mb-6 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.6' }}>
-              Explore the interconnected network of <span className="inline-flex items-center gap-1"><span>organizations</span><TermTooltip term="ecosystem-role" iconSize={16} /></span>, projects, and programs
+            <div className="text-xs md:text-sm max-w-xl mx-auto mb-4 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.5' }}>
+              Explore the interconnected network of <span className="inline-flex items-center gap-1"><span>organizations</span><TermTooltip term="ecosystem-role" iconSize={14} /></span>, projects, and programs
               shaping the future of psychedelic research and therapy
             </div>
           </div>
@@ -270,7 +270,7 @@ function ToolsPageContent() {
 
       {/* Main Content */}
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6">
           {/* Tab Container */}
           <div className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-shadow overflow-hidden border-2" style={{ borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.15), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
             {/* Tab Navigation */}
