@@ -101,7 +101,7 @@ export default function FrameworkExplorer({
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(wv =>
         wv.name.toLowerCase().includes(term) ||
-        wv.shortName.toLowerCase().includes(term) ||
+        wv.shortName?.toLowerCase().includes(term) ||
         wv.tagline?.toLowerCase().includes(term) ||
         wv.description?.toLowerCase().includes(term)
       );
@@ -130,10 +130,10 @@ export default function FrameworkExplorer({
     // Sort
     switch (worldviewSort) {
       case 'alphabetical-az':
-        filtered.sort((a, b) => a.shortName.localeCompare(b.shortName));
+        filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         break;
       case 'alphabetical-za':
-        filtered.sort((a, b) => b.shortName.localeCompare(a.shortName));
+        filtered.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
         break;
       case 'cluster':
         filtered.sort((a, b) => (a.cluster || '').localeCompare(b.cluster || ''));
@@ -1506,7 +1506,7 @@ export default function FrameworkExplorer({
                           className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-lg"
                           style={{ backgroundColor: worldview.color || '#6B7280' }}
                         >
-                          {worldview.shortName.substring(0, 2).toUpperCase()}
+                          {(worldview.shortName || worldview.name || 'WV').substring(0, 2).toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-teal-600 transition-colors leading-tight">
@@ -1572,7 +1572,7 @@ export default function FrameworkExplorer({
                         className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0"
                         style={{ backgroundColor: worldview.color || '#6B7280' }}
                       >
-                        {worldview.shortName.substring(0, 2).toUpperCase()}
+                        {(worldview.shortName || worldview.name || 'WV').substring(0, 2).toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-teal-600 transition-colors">
@@ -1613,7 +1613,7 @@ export default function FrameworkExplorer({
                       className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs flex-shrink-0"
                       style={{ backgroundColor: worldview.color || '#6B7280' }}
                     >
-                      {worldview.shortName.substring(0, 2).toUpperCase()}
+                      {(worldview.shortName || worldview.name || 'WV').substring(0, 2).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-bold text-gray-900 group-hover:text-teal-600 transition-colors truncate">
