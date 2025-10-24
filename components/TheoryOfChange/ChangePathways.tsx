@@ -946,7 +946,7 @@ export default function ChangePathways({
                     style={{ backgroundColor: wv.color || '#6B7280' }}
                     title={`${wv.name} - Click to remove`}
                   >
-                    <span>{wv.shortName || wv.name}</span>
+                    <span>{wv.name}</span>
                     <X size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
                   </button>
                 );
@@ -1061,7 +1061,7 @@ export default function ChangePathways({
                     }}
                   >
                     <div className="font-semibold text-sm pr-16 break-words" style={{ color: LIGHT_TEXT.primary }}>
-                      {wv.shortName || wv.name}
+                      {wv.name}
                     </div>
                     <div className="text-xs mt-1 line-clamp-2 pr-16" style={{ color: LIGHT_TEXT.tertiary }}>
                       {wv.tagline}
