@@ -167,10 +167,10 @@ export default function FrameworkExplorer({
     // Sort
     switch (outcomeSort) {
       case 'outcome-id':
-        filtered.sort((a, b) => a.outcomeId.localeCompare(b.outcomeId));
+        filtered.sort((a, b) => (a.outcomeId || '').localeCompare(b.outcomeId || ''));
         break;
       case 'alphabetical-az':
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         break;
       case 'problems-desc':
         filtered.sort((a, b) => {
@@ -228,10 +228,10 @@ export default function FrameworkExplorer({
     // Sort
     switch (problemSort) {
       case 'problem-id':
-        filtered.sort((a, b) => a.problemId.localeCompare(b.problemId));
+        filtered.sort((a, b) => (a.problemId || '').localeCompare(b.problemId || ''));
         break;
       case 'alphabetical-az':
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         break;
       case 'category':
         filtered.sort((a, b) => (a.category || '').localeCompare(b.category || ''));
@@ -296,10 +296,10 @@ export default function FrameworkExplorer({
     // Sort
     switch (projectSort) {
       case 'alphabetical-az':
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         break;
       case 'alphabetical-za':
-        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        filtered.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
         break;
       case 'status':
         filtered.sort((a, b) => (a.status || '').localeCompare(b.status || ''));
