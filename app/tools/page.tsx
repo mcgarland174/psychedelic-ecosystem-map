@@ -638,15 +638,13 @@ function ToolsPageContent() {
             </main>
           )}
           {!tocLoading && !tocError && tocData && (
-            <div style={{ zoom: 0.85 }}>
-              <ChangePathways
-                worldviews={tocData.worldviews}
-                outcomes={tocData.outcomes}
-                problems={tocData.problems}
-                problemCategories={tocData.problemCategories}
-                projects={tocData.projects}
-              />
-            </div>
+            <ChangePathways
+              worldviews={tocData.worldviews}
+              outcomes={tocData.outcomes}
+              problems={tocData.problems}
+              problemCategories={tocData.problemCategories}
+              projects={tocData.projects}
+            />
           )}
         </>
       )}
@@ -683,15 +681,13 @@ function ToolsPageContent() {
             </main>
           )}
           {!tocLoading && !tocError && tocData && (
-            <div style={{ zoom: 0.85 }}>
-              <FrameworkExplorer
-                worldviews={tocData.worldviews}
-                outcomes={tocData.outcomes}
-                problems={tocData.problems}
-                problemCategories={tocData.problemCategories}
-                projects={tocData.projects}
-              />
-            </div>
+            <FrameworkExplorer
+              worldviews={tocData.worldviews}
+              outcomes={tocData.outcomes}
+              problems={tocData.problems}
+              problemCategories={tocData.problemCategories}
+              projects={tocData.projects}
+            />
           )}
         </>
       )}

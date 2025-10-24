@@ -384,7 +384,7 @@ export default function FrameworkExplorer({
 
   return (
     <>
-      <section className="min-h-screen px-6 py-12" style={{ backgroundColor: LIGHT_BACKGROUNDS.primary }}>
+      <section className="min-h-screen px-6 py-12" style={{ backgroundColor: LIGHT_BACKGROUNDS.primary, zoom: 0.85 }}>
         <div className="max-w-[1800px] mx-auto">
           {/* Compact Header */}
           <div className="text-center mb-8">
