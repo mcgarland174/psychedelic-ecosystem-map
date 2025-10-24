@@ -270,7 +270,7 @@ function ToolsPageContent() {
 
       {/* Main Content */}
       <main className="flex-1">
-        <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6" style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6" style={{ zoom: 0.85 }}>
           {/* Tab Container */}
           <div className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-shadow overflow-hidden border-2" style={{ borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.15), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
             {/* Tab Navigation */}
@@ -638,7 +638,7 @@ function ToolsPageContent() {
             </main>
           )}
           {!tocLoading && !tocError && tocData && (
-            <div style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+            <div style={{ zoom: 0.85 }}>
               <ChangePathways
                 worldviews={tocData.worldviews}
                 outcomes={tocData.outcomes}
@@ -683,7 +683,7 @@ function ToolsPageContent() {
             </main>
           )}
           {!tocLoading && !tocError && tocData && (
-            <div style={{ transform: 'scale(0.85)', transformOrigin: 'top center' }}>
+            <div style={{ zoom: 0.85 }}>
               <FrameworkExplorer
                 worldviews={tocData.worldviews}
                 outcomes={tocData.outcomes}
