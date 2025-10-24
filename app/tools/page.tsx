@@ -259,10 +259,10 @@ function ToolsPageContent() {
             <h1 className="text-5xl md:text-7xl font-bold mb-4 animate-slideUp" style={{ color: '#2B180A' }}>
               Psychedelic Ecosystem Map
             </h1>
-            <p className="text-base md:text-xl max-w-3xl mx-auto mb-8 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.6' }}>
+            <div className="text-base md:text-xl max-w-3xl mx-auto mb-8 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.6' }}>
               Explore the interconnected network of <span className="inline-flex items-center gap-1"><span>organizations</span><TermTooltip term="ecosystem-role" iconSize={18} /></span>, projects, and programs
               shaping the future of psychedelic research and therapy
-            </p>
+            </div>
           </div>
 
         </div>
