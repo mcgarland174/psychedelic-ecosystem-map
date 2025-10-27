@@ -116,6 +116,7 @@ export function getSubmitProjectUrl(): string {
  */
 export function getEditProjectUrl(project: AppProject): string {
   return buildFormUrl(FORM_URLS.editProject, {
+    'prefill_Projects': project.recordId, // Linked record field in Airtable
     'prefill_Project Name': project.name,
     'prefill_Description': project.description,
     'prefill_Status': project.status,

@@ -72,6 +72,7 @@ export interface AppProblem {
 
 export interface AppProject {
   id: string; // Simple slug ID
+  recordId: string; // Airtable record ID for editing
   name: string;
   organizations: string[];
   description: string;
@@ -283,6 +284,7 @@ export function transformProjects(
 
     return {
       id: slugId,
+      recordId: project.id, // Airtable record ID
       name: project.name,
       organizations,
       description: project.description || '',
