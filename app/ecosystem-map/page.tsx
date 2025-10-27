@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import FocusTrap from 'focus-trap-react';
 import SiteNavigation from '@/components/SiteNavigation';
 import SimpleBubbleView from '@/components/SimpleBubbleView';
@@ -27,9 +28,17 @@ interface Organization {
 }
 
 export default function EcosystemMapPage() {
-  const [activeSection, setActiveSection] = useState<'organizations' | 'projects'>('organizations');
+  const searchParams = useSearchParams();
+
+  // Check if in embed mode
+  const isEmbedMode = searchParams.get('embed') === 'true';
+  const locationFilter = searchParams.get('location');
+  const initialSection = (searchParams.get('section') as 'organizations' | 'projects') || 'organizations';
+  const initialOrgView = (searchParams.get('view') as 'grouped' | 'geographic' | 'table') || 'grouped';
+
+  const [activeSection, setActiveSection] = useState<'organizations' | 'projects'>(initialSection);
   const [transitionDirection, setTransitionDirection] = useState<'left' | 'right'>('right');
-  const [orgView, setOrgView] = useState<'grouped' | 'geographic' | 'table'>('grouped');
+  const [orgView, setOrgView] = useState<'grouped' | 'geographic' | 'table'>(initialOrgView);
   const [projectView, setProjectView] = useState<'grouped' | 'geographic' | 'directory'>('grouped');
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
@@ -56,10 +65,22 @@ export default function EcosystemMapPage() {
         if (!orgsResponse.ok) throw new Error('Failed to fetch organizations');
         if (!projectsResponse.ok) throw new Error('Failed to fetch projects');
 
-        const [orgsData, projectsData] = await Promise.all([
+        let [orgsData, projectsData] = await Promise.all([
           orgsResponse.json(),
           projectsResponse.json()
         ]);
+
+        // Apply location filter if specified
+        if (locationFilter) {
+          orgsData = orgsData.filter((org: Organization) =>
+            org.state?.some(s => s.toLowerCase().includes(locationFilter.toLowerCase())) ||
+            org.city?.toLowerCase().includes(locationFilter.toLowerCase()) ||
+            org.country?.some(c => c.toLowerCase().includes(locationFilter.toLowerCase()))
+          );
+          projectsData = projectsData.filter((proj: any) =>
+            proj.geographicLocation?.some((loc: string) => loc.toLowerCase().includes(locationFilter.toLowerCase()))
+          );
+        }
 
         setOrganizations(orgsData);
         setProjects(projectsData);
@@ -73,7 +94,7 @@ export default function EcosystemMapPage() {
     }
 
     fetchData();
-  }, []);
+  }, [locationFilter]);
 
   // Handle Escape key for modals
   useEffect(() => {
@@ -95,8 +116,8 @@ export default function EcosystemMapPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
-        <SiteNavigation />
+      <div className="min-h-screen" style={{ backgroundColor: isEmbedMode ? 'transparent' : '#FBF3E7' }}>
+        {!isEmbedMode && <SiteNavigation />}
         <div className="flex items-center justify-center h-[calc(100vh-100px)]">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500 mb-4"></div>
@@ -109,8 +130,8 @@ export default function EcosystemMapPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
-        <SiteNavigation />
+      <div className="min-h-screen" style={{ backgroundColor: isEmbedMode ? 'transparent' : '#FBF3E7' }}>
+        {!isEmbedMode && <SiteNavigation />}
         <div className="flex flex-col items-center justify-center h-[calc(100vh-100px)] gap-4 px-4">
           <div className="w-24 h-24 mb-4 bg-red-100 rounded-full flex items-center justify-center">
             <svg className="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -131,34 +152,38 @@ export default function EcosystemMapPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
-      <SiteNavigation />
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: isEmbedMode ? 'transparent' : '#FBF3E7' }}>
+      {!isEmbedMode && <SiteNavigation />}
 
-      {/* Decorative Top Bar */}
-      <div className="h-1.5 bg-gradient-to-r from-teal-600 to-teal-500" />
+      {!isEmbedMode && (
+        <>
+          {/* Decorative Top Bar */}
+          <div className="h-1.5 bg-gradient-to-r from-teal-600 to-teal-500" />
 
-      {/* Hero Header */}
-      <header className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F7F0E8 0%, #FFFFFF 100%)' }}>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 pb-0">
-          <div className="text-center mb-4">
-            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 animate-slideUp" style={{ color: '#2B180A' }}>
-              Psychedelic Ecosystem Map
-            </h1>
-            <div className="text-xs md:text-sm max-w-xl mx-auto mb-4 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.5' }}>
-              Explore the interconnected network of <span className="inline-flex items-center gap-1"><span>organizations</span><TermTooltip term="ecosystem-role" iconSize={14} /></span>, projects, and programs
-              shaping the future of psychedelic research and therapy
+          {/* Hero Header */}
+          <header className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F7F0E8 0%, #FFFFFF 100%)' }}>
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 pb-0">
+              <div className="text-center mb-4">
+                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 animate-slideUp" style={{ color: '#2B180A' }}>
+                  Psychedelic Ecosystem Map
+                </h1>
+                <div className="text-xs md:text-sm max-w-xl mx-auto mb-4 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.5' }}>
+                  Explore the interconnected network of <span className="inline-flex items-center gap-1"><span>organizations</span><TermTooltip term="ecosystem-role" iconSize={14} /></span>, projects, and programs
+                  shaping the future of psychedelic research and therapy
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </header>
+          </header>
+        </>
+      )}
 
       {/* Main Content */}
       <main className="flex-1">
-        <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6" style={{ zoom: 0.85 }}>
+        <div className={isEmbedMode ? "w-full h-full" : "max-w-6xl mx-auto px-3 sm:px-4 lg:px-6"} style={isEmbedMode ? {} : { zoom: 0.85 }}>
           {/* Tab Container */}
-          <div className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-shadow overflow-hidden border-2" style={{ borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.15), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
+          <div className={isEmbedMode ? "" : "bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-shadow overflow-hidden border-2"} style={isEmbedMode ? {} : { borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.15), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
             {/* Tab Navigation */}
-            <div className="flex border-b-2" style={{ borderColor: '#E6C8A1', background: 'linear-gradient(to right, #FBF3E7, #F7F0E8)' }}>
+            {!isEmbedMode && <div className="flex border-b-2" style={{ borderColor: '#E6C8A1', background: 'linear-gradient(to right, #FBF3E7, #F7F0E8)' }}>
               <button
                 onClick={() => {
                   setTransitionDirection('left');
@@ -212,21 +237,35 @@ export default function EcosystemMapPage() {
                 </svg>
                 Projects ({projects.length})
               </button>
-            </div>
+            </div>}
 
             {/* Tab Content */}
-            <div className="p-10 min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
+            <div className={isEmbedMode ? "" : "p-10 min-h-screen"} style={isEmbedMode ? {} : { backgroundColor: '#FBF3E7' }}>
               {/* Organizations Section */}
               {activeSection === 'organizations' && (
                 <div key="org-section" className={transitionDirection === 'left' ? 'animate-slideInFromLeft' : 'animate-slideInFromRight'}>
-                  {/* Modern View Tabs with Decorative Top Bar */}
-                  <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow border-2 overflow-hidden mb-8" style={{ borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.1), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
-                    {/* Decorative Top Bar */}
-                    <div className="h-1.5 bg-gradient-to-r from-teal-600 to-teal-500" />
+                  {isEmbedMode ? (
+                    // Embed Mode: Show only the visualization
+                    <div>
+                      {orgView === 'grouped' && (
+                        <SimpleBubbleView organizations={organizations} onOrgClick={setSelectedOrgId} hideControls={true} />
+                      )}
+                      {orgView === 'geographic' && (
+                        <GeographicCompositionView organizations={organizations} onOrgClick={setSelectedOrgId} />
+                      )}
+                      {orgView === 'table' && (
+                        <TableView organizations={organizations} onOrgClick={setSelectedOrgId} />
+                      )}
+                    </div>
+                  ) : (
+                    // Normal Mode: Show full UI with tabs and controls
+                    <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow border-2 overflow-hidden mb-8" style={{ borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.1), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
+                      {/* Decorative Top Bar */}
+                      <div className="h-1.5 bg-gradient-to-r from-teal-600 to-teal-500" />
 
-                    <div className="border-b" style={{ borderColor: '#E6C8A1' }}>
-                      <div className="flex items-center justify-between px-6 py-3">
-                        <nav className="flex space-x-2" aria-label="Views">
+                      <div className="border-b" style={{ borderColor: '#E6C8A1' }}>
+                        <div className="flex items-center justify-between px-6 py-3">
+                          <nav className="flex space-x-2" aria-label="Views">
                           <button
                             onClick={() => setOrgView('grouped')}
                             className={`
@@ -318,7 +357,8 @@ export default function EcosystemMapPage() {
                         <TableView organizations={organizations} onOrgClick={setSelectedOrgId} />
                       )}
                     </div>
-                  </div>
+                    </div>
+                  )}
                 </div>
               )}
 

@@ -17,6 +17,7 @@ interface Organization {
 interface SimpleBubbleViewProps {
   organizations: Organization[];
   onOrgClick?: (orgId: string) => void;
+  hideControls?: boolean;
 }
 
 type GroupingField = 'ecosystemRole' | 'entityType' | 'organizationType' | 'state' | 'country';
@@ -40,7 +41,7 @@ const BRAND_COLORS = [
   '#48A5CC', // skyBlue (accent)
 ];
 
-export default function SimpleBubbleView({ organizations, onOrgClick }: SimpleBubbleViewProps) {
+export default function SimpleBubbleView({ organizations, onOrgClick, hideControls = false }: SimpleBubbleViewProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [groupBy, setGroupBy] = useState<GroupingField>('ecosystemRole');
   const [filterType, setFilterType] = useState<string>('none');
@@ -583,9 +584,9 @@ export default function SimpleBubbleView({ organizations, onOrgClick }: SimpleBu
   const expandedData = bubbleData.find(b => b.key === expandedBubble);
 
   return (
-    <div className="space-y-6 px-8">
+    <div className={hideControls ? "" : "space-y-6 px-8"}>
       {/* Controls */}
-      <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border-2 p-6" style={{ borderColor: '#E6C8A1', boxShadow: '0 4px 6px -1px rgba(49, 126, 109, 0.1), 0 2px 4px -1px rgba(49, 126, 109, 0.06)' }}>
+      {!hideControls && <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow border-2 p-6" style={{ borderColor: '#E6C8A1', boxShadow: '0 4px 6px -1px rgba(49, 126, 109, 0.1), 0 2px 4px -1px rgba(49, 126, 109, 0.06)' }}>
         {/* Chart Type Toggle */}
         <div className="mb-4 pb-4 border-b" style={{ borderColor: '#E6C8A1' }}>
           <label className="block text-sm font-semibold mb-2" style={{ color: '#2B180A' }}>
@@ -776,16 +777,16 @@ export default function SimpleBubbleView({ organizations, onOrgClick }: SimpleBu
             )}
           </div>
         </div>
-      </div>
+      </div>}
 
-      <div className="mb-4">
+      {!hideControls && <div className="mb-4">
         <h3 className="text-xl font-bold text-teal-700">
           {chartType === 'bubble' ? 'Category Bubbles' : 'Category Bars'}
         </h3>
         <p className="text-sm mt-1" style={{ color: '#6B6764' }}>
           {chartType === 'bubble' ? 'Click a bubble to explore organizations' : 'Click a bar to explore organizations'}
         </p>
-      </div>
+      </div>}
 
       {/* D3 Bubble Pack Visualization */}
       <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-2" style={{ minHeight: '600px', background: 'linear-gradient(135deg, #FBF3E7 0%, #F7F0E8 100%)', borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.15), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
