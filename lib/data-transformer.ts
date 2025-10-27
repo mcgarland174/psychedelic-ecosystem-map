@@ -43,6 +43,7 @@ export interface AppWorldview {
 
 export interface AppOutcome {
   id: string; // Simple slug ID
+  recordId: string; // Airtable record ID for editing
   outcomeId: string; // Display ID like "O1", "O2"
   name: string;
   shortDescription: string;
@@ -61,6 +62,7 @@ export interface AppProblemCategory {
 
 export interface AppProblem {
   id: string; // Simple slug ID
+  recordId: string; // Airtable record ID for editing
   problemId: string; // Display ID like "P1", "P2"
   name: string;
   description: string;
@@ -177,6 +179,7 @@ export function transformOutcomes(
 
     return {
       id: slugId,
+      recordId: outcome.id, // Airtable record ID
       outcomeId: outcome.outcomeId,
       name: outcome.name,
       shortDescription: outcome.shortDescription || '',
@@ -240,6 +243,7 @@ export function transformProblems(
 
     return {
       id: slugId,
+      recordId: problem.id, // Airtable record ID
       problemId: problem.problemId,
       name: problem.name,
       description: problem.description || '',
