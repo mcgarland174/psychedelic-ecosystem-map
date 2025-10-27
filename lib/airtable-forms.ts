@@ -76,7 +76,7 @@ export function getProposeOutcomeUrl(): string {
  */
 export function getEditOutcomeUrl(outcome: AppOutcome): string {
   return buildFormUrl(FORM_URLS.editOutcome, {
-    'prefill_outcome': outcome.recordId, // Linked record field in Airtable
+    'prefill_Outcomes': outcome.recordId, // Linked record field in Airtable
     'prefill_Outcome Name': outcome.name,
     'prefill_Outcome ID': outcome.outcomeId,
     'prefill_Short Description': outcome.shortDescription,
@@ -97,7 +97,7 @@ export function getProposeeProblemUrl(): string {
  */
 export function getEditProblemUrl(problem: AppProblem): string {
   return buildFormUrl(FORM_URLS.editProblem, {
-    'prefill_problem addressed': problem.recordId, // Linked record field in Airtable
+    'prefill_Problem Addressed': problem.recordId, // Linked record field in Airtable
     'prefill_Problem Name': problem.name,
     'prefill_Problem ID': problem.problemId,
     'prefill_Description': problem.description,
