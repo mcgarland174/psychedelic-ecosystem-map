@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Iframe Test</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      color: #2B180A;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    iframe {
+      width: 100%;
+      border: 2px solid #E6C8A1;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Testing Embed - Colorado Organizations</h1>
+    <p>This iframe shows the Colorado ecosystem map embed from production:</p>
+
+    <iframe
+      src="https://psychedelic-ecosystem-map.vercel.app/ecosystem-map?embed=true&location=Colorado&section=organizations&view=grouped"
+      height="600">
+    </iframe>
+  </div>
+</body>
+</html>

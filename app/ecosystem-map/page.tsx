@@ -35,11 +35,22 @@ function EcosystemMapContent() {
   const locationFilter = searchParams?.get('location') || undefined;
   const initialSection = (searchParams?.get('section') as 'organizations' | 'projects') || 'organizations';
   const initialOrgView = (searchParams?.get('view') as 'grouped' | 'geographic' | 'table') || 'grouped';
+  const initialChartType = (searchParams?.get('chartType') as 'bubble' | 'bar') || 'bubble';
+  const initialGroupBy = (searchParams?.get('groupBy') as 'ecosystemRole' | 'entityType' | 'organizationType' | 'state' | 'country') || 'ecosystemRole';
+  const initialFilterType = searchParams?.get('filterType') || 'none';
+  const initialFilterValue = searchParams?.get('filterValue') || 'all';
 
   const [activeSection, setActiveSection] = useState<'organizations' | 'projects'>(initialSection);
   const [transitionDirection, setTransitionDirection] = useState<'left' | 'right'>('right');
   const [orgView, setOrgView] = useState<'grouped' | 'geographic' | 'table'>(initialOrgView);
   const [projectView, setProjectView] = useState<'grouped' | 'geographic' | 'directory'>('grouped');
+
+  // Chart visualization controls
+  const [chartType, setChartType] = useState<'bubble' | 'bar'>(initialChartType);
+  const [groupBy, setGroupBy] = useState<'ecosystemRole' | 'entityType' | 'organizationType' | 'state' | 'country'>(initialGroupBy);
+  const [filterType, setFilterType] = useState<string>(initialFilterType);
+  const [filterValue, setFilterValue] = useState<string>(initialFilterValue);
+
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,6 +75,15 @@ function EcosystemMapContent() {
 
     if (activeSection === 'organizations') {
       params.set('view', orgView);
+      // Only add chartType, groupBy, and filters for grouped view (bubble/bar charts)
+      if (orgView === 'grouped') {
+        params.set('chartType', chartType);
+        params.set('groupBy', groupBy);
+        if (filterType !== 'none') {
+          params.set('filterType', filterType);
+          params.set('filterValue', filterValue);
+        }
+      }
     } else {
       params.set('view', projectView);
     }
@@ -285,7 +305,19 @@ function EcosystemMapContent() {
                     // Embed Mode: Show only the visualization
                     <div>
                       {orgView === 'grouped' && (
-                        <SimpleBubbleView organizations={organizations} onOrgClick={setSelectedOrgId} hideControls={true} />
+                        <SimpleBubbleView
+                          organizations={organizations}
+                          onOrgClick={setSelectedOrgId}
+                          hideControls={true}
+                          chartType={chartType}
+                          onChartTypeChange={setChartType}
+                          groupBy={groupBy}
+                          onGroupByChange={setGroupBy}
+                          filterType={filterType}
+                          onFilterTypeChange={setFilterType}
+                          filterValue={filterValue}
+                          onFilterValueChange={setFilterValue}
+                        />
                       )}
                       {orgView === 'geographic' && (
                         <GeographicCompositionView organizations={organizations} onOrgClick={setSelectedOrgId} />
@@ -398,7 +430,18 @@ function EcosystemMapContent() {
                     {/* View Content */}
                     <div className="p-8 bg-white">
                       {orgView === 'grouped' && (
-                        <SimpleBubbleView organizations={organizations} onOrgClick={setSelectedOrgId} />
+                        <SimpleBubbleView
+                          organizations={organizations}
+                          onOrgClick={setSelectedOrgId}
+                          chartType={chartType}
+                          onChartTypeChange={setChartType}
+                          groupBy={groupBy}
+                          onGroupByChange={setGroupBy}
+                          filterType={filterType}
+                          onFilterTypeChange={setFilterType}
+                          filterValue={filterValue}
+                          onFilterValueChange={setFilterValue}
+                        />
                       )}
                       {orgView === 'geographic' && (
                         <GeographicCompositionView organizations={organizations} onOrgClick={setSelectedOrgId} />

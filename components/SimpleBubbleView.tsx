@@ -18,6 +18,15 @@ interface SimpleBubbleViewProps {
   organizations: Organization[];
   onOrgClick?: (orgId: string) => void;
   hideControls?: boolean;
+  // Controlled props for state management
+  chartType?: 'bubble' | 'bar';
+  onChartTypeChange?: (type: 'bubble' | 'bar') => void;
+  groupBy?: GroupingField;
+  onGroupByChange?: (field: GroupingField) => void;
+  filterType?: string;
+  onFilterTypeChange?: (type: string) => void;
+  filterValue?: string;
+  onFilterValueChange?: (value: string) => void;
 }
 
 type GroupingField = 'ecosystemRole' | 'entityType' | 'organizationType' | 'state' | 'country';
@@ -41,14 +50,39 @@ const BRAND_COLORS = [
   '#48A5CC', // skyBlue (accent)
 ];
 
-export default function SimpleBubbleView({ organizations, onOrgClick, hideControls = false }: SimpleBubbleViewProps) {
+export default function SimpleBubbleView({
+  organizations,
+  onOrgClick,
+  hideControls = false,
+  chartType: chartTypeProp,
+  onChartTypeChange,
+  groupBy: groupByProp,
+  onGroupByChange,
+  filterType: filterTypeProp,
+  onFilterTypeChange,
+  filterValue: filterValueProp,
+  onFilterValueChange,
+}: SimpleBubbleViewProps) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [groupBy, setGroupBy] = useState<GroupingField>('ecosystemRole');
-  const [filterType, setFilterType] = useState<string>('none');
-  const [filterValue, setFilterValue] = useState<string>('all');
+
+  // Use internal state only if controlled props not provided
+  const [internalGroupBy, setInternalGroupBy] = useState<GroupingField>('ecosystemRole');
+  const [internalFilterType, setInternalFilterType] = useState<string>('none');
+  const [internalFilterValue, setInternalFilterValue] = useState<string>('all');
+  const [internalChartType, setInternalChartType] = useState<'bubble' | 'bar'>('bubble');
+
   const [expandedBubble, setExpandedBubble] = useState<string | null>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [chartType, setChartType] = useState<'bubble' | 'bar'>('bubble');
+
+  // Use controlled or internal state
+  const groupBy = groupByProp ?? internalGroupBy;
+  const setGroupBy = onGroupByChange ?? setInternalGroupBy;
+  const filterType = filterTypeProp ?? internalFilterType;
+  const setFilterType = onFilterTypeChange ?? setInternalFilterType;
+  const filterValue = filterValueProp ?? internalFilterValue;
+  const setFilterValue = onFilterValueChange ?? setInternalFilterValue;
+  const chartType = chartTypeProp ?? internalChartType;
+  const setChartType = onChartTypeChange ?? setInternalChartType;
 
   // Get filter options based on selected filter type
   const filterOptions = useMemo(() => {
