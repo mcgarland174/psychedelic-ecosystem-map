@@ -25,6 +25,7 @@ import { getCategoryIcon } from './category-icons';
 // App-expected types
 export interface AppWorldview {
   id: string; // Simple slug ID
+  recordId: string; // Airtable record ID for editing
   name: string;
   shortName: string;
   color: string;
@@ -130,6 +131,7 @@ export function transformWorldviews(
 
     return {
       id: slugId,
+      recordId: wv.id, // Airtable record ID
       name: wv.name,
       shortName: wv.shortName,
       color: wv.color || '#9CA3AF',

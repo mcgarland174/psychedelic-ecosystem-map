@@ -52,6 +52,7 @@ export function getProposeWorldviewUrl(): string {
  */
 export function getEditWorldviewUrl(worldview: AppWorldview): string {
   return buildFormUrl(FORM_URLS.editWorldview, {
+    'prefill_Worldview': worldview.recordId, // This should match the linked record field name in Airtable
     'prefill_Worldview Name': worldview.name,
     'prefill_Short Name': worldview.shortName,
     'prefill_Tagline': worldview.tagline,
