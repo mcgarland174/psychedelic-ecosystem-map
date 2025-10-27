@@ -46,6 +46,58 @@ export default function OrgDetailPanel({ orgId, organizations, projects, onClose
     return projects.filter((p) => org.projects?.includes(p.id));
   }, [org, projects]);
 
+  // Build the edit form URL with all available prefill data
+  const editFormUrlWithPrefill = useMemo(() => {
+    if (!editFormUrl || !org) return editFormUrl;
+
+    const params = new URLSearchParams();
+
+    // Organization record link (required)
+    params.append('prefill_Organization', org.id);
+
+    // Entity Type (single select/text)
+    if (org.entityType) {
+      params.append('prefill_Entity Type', org.entityType);
+    }
+
+    // Organization Type (multiple select - comma separated)
+    if (org.organizationType && org.organizationType.length > 0) {
+      params.append('prefill_Organization Type', org.organizationType.join(', '));
+    }
+
+    // Ecosystem Role (multiple select - comma separated)
+    if (org.ecosystemRole && org.ecosystemRole.length > 0) {
+      params.append('prefill_Ecosystem Role', org.ecosystemRole.join(', '));
+    }
+
+    // Website
+    if (org.website) {
+      params.append('prefill_Website', org.website);
+    }
+
+    // City
+    if (org.city) {
+      params.append('prefill_City', org.city);
+    }
+
+    // State/Province (take first one if multiple)
+    if (org.state && org.state.length > 0) {
+      params.append('prefill_State/Province', org.state[0]);
+    }
+
+    // Country (take first one if multiple)
+    if (org.country && org.country.length > 0) {
+      params.append('prefill_Country', org.country[0]);
+    }
+
+    // Description of Activities
+    if (org.descriptionOfActivities) {
+      params.append('prefill_Description of Activities', org.descriptionOfActivities);
+    }
+
+    return `${editFormUrl}?${params.toString()}`;
+  }, [editFormUrl, org]);
+
   if (!orgId || !org) return null;
 
   return (
@@ -70,9 +122,9 @@ export default function OrgDetailPanel({ orgId, organizations, projects, onClose
           </div>
           <div className="flex items-center gap-3">
             {/* Request Edit Button */}
-            {editFormUrl && (
+            {editFormUrlWithPrefill && (
               <a
-                href={`${editFormUrl}?prefill_Organization=${encodeURIComponent(org.name)}&prefill_ID=${encodeURIComponent(org.id)}`}
+                href={editFormUrlWithPrefill}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white rounded-lg font-bold text-sm transition-all hover:scale-105 flex items-center gap-2 shadow-lg"

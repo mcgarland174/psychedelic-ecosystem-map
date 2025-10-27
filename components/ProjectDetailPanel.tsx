@@ -60,6 +60,142 @@ export default function ProjectDetailPanel({ projectId, projects, organizations,
     );
   }, [project, organizations]);
 
+  // Build the edit form URL with all available prefill data
+  const editFormUrlWithPrefill = useMemo(() => {
+    if (!editFormUrl || !project) return editFormUrl;
+
+    const params = new URLSearchParams();
+
+    // Project record link (required)
+    params.append('prefill_Project', project.id);
+
+    // Name
+    if (project.name) {
+      params.append('prefill_Name', project.name);
+    }
+
+    // Description
+    if (project.description) {
+      params.append('prefill_Description', project.description);
+    }
+
+    // Priority Area
+    if (project.priorityArea) {
+      params.append('prefill_Priority Area', project.priorityArea);
+    }
+
+    // Type of Project (multiple select)
+    if (project.typeOfProject && project.typeOfProject.length > 0) {
+      params.append('prefill_Type of Project', project.typeOfProject.join(', '));
+    }
+
+    // Geographic Location (multiple select)
+    if (project.geographicLocation && project.geographicLocation.length > 0) {
+      params.append('prefill_Geographic Location', project.geographicLocation.join(', '));
+    }
+
+    // Status
+    if (project.status) {
+      params.append('prefill_Status', project.status);
+    }
+
+    // Website
+    if (project.website) {
+      params.append('prefill_Website', project.website);
+    }
+
+    // Current Progress
+    if (project.currentProgress) {
+      params.append('prefill_Current Progress', project.currentProgress);
+    }
+
+    // Describe Current Progress
+    if (project.describeCurrentProgress) {
+      params.append('prefill_Describe Current Progress', project.describeCurrentProgress);
+    }
+
+    // Project Milestones
+    if (project.projectMilestones) {
+      params.append('prefill_Project Milestones', project.projectMilestones);
+    }
+
+    // Expected Impact
+    if (project.expectedImpact) {
+      params.append('prefill_Expected Impact', project.expectedImpact);
+    }
+
+    // Actively Fundraising
+    if (project.activelyFundraising) {
+      params.append('prefill_Actively Fundraising', project.activelyFundraising);
+    }
+
+    // Amount Raised To Date
+    if (project.amountRaisedToDate !== undefined) {
+      params.append('prefill_Amount Raised To Date', project.amountRaisedToDate.toString());
+    }
+
+    // Amount Seeking
+    if (project.amountSeeking !== undefined) {
+      params.append('prefill_Amount Seeking', project.amountSeeking.toString());
+    }
+
+    // Expected Annual Revenue
+    if (project.expectedAnnualRevenue) {
+      params.append('prefill_Expected Annual Revenue', project.expectedAnnualRevenue);
+    }
+
+    // Will Generate Revenue
+    if (project.willGenerateRevenue) {
+      params.append('prefill_Will Generate Revenue', project.willGenerateRevenue);
+    }
+
+    // Project Start Date
+    if (project.projectStartDate) {
+      params.append('prefill_Project Start Date', project.projectStartDate);
+    }
+
+    // Expected Completion Date
+    if (project.expectedCompletionDate) {
+      params.append('prefill_Expected Completion Date', project.expectedCompletionDate);
+    }
+
+    // Sustainability Timeline (multiple select)
+    if (project.sustainabilityTimeline && project.sustainabilityTimeline.length > 0) {
+      params.append('prefill_Sustainability Timeline', project.sustainabilityTimeline.join(', '));
+    }
+
+    // Project Funders
+    if (project.projectFunders) {
+      params.append('prefill_Project Funders', project.projectFunders);
+    }
+
+    // Associated Organizations (linked records - send as comma-separated IDs)
+    if (project.associatedOrganizations && project.associatedOrganizations.length > 0) {
+      // Try to get the actual org IDs if they exist
+      const orgIds = project.associatedOrganizations
+        .map(orgIdOrName => {
+          const org = organizations.find(o => o.id === orgIdOrName || o.name === orgIdOrName);
+          return org ? org.id : orgIdOrName;
+        })
+        .filter(Boolean);
+      if (orgIds.length > 0) {
+        params.append('prefill_Associated Organizations', orgIds.join(', '));
+      }
+    }
+
+    // Team Lead (multiple select or linked records)
+    if (project.teamLead && project.teamLead.length > 0) {
+      params.append('prefill_Team Lead', project.teamLead.join(', '));
+    }
+
+    // People Involved (multiple select or linked records)
+    if (project.peopleInvolved && project.peopleInvolved.length > 0) {
+      params.append('prefill_People Involved', project.peopleInvolved.join(', '));
+    }
+
+    return `${editFormUrl}?${params.toString()}`;
+  }, [editFormUrl, project, organizations]);
+
   if (!projectId || !project) return null;
 
   return (
@@ -73,9 +209,9 @@ export default function ProjectDetailPanel({ projectId, projects, organizations,
           </div>
           <div className="flex items-center gap-3">
             {/* Request Edit Button */}
-            {editFormUrl && (
+            {editFormUrlWithPrefill && (
               <a
-                href={`${editFormUrl}?prefill_Project=${encodeURIComponent(project.name)}&prefill_ID=${encodeURIComponent(project.id)}`}
+                href={editFormUrlWithPrefill}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white rounded-lg font-bold text-sm transition-all hover:scale-105 flex items-center gap-2 shadow-lg"
