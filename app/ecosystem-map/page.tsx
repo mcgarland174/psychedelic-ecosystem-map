@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import FocusTrap from 'focus-trap-react';
 import SiteNavigation from '@/components/SiteNavigation';
@@ -27,14 +27,14 @@ interface Organization {
   verified?: boolean;
 }
 
-export default function EcosystemMapPage() {
+function EcosystemMapContent() {
   const searchParams = useSearchParams();
 
-  // Check if in embed mode
-  const isEmbedMode = searchParams.get('embed') === 'true';
-  const locationFilter = searchParams.get('location');
-  const initialSection = (searchParams.get('section') as 'organizations' | 'projects') || 'organizations';
-  const initialOrgView = (searchParams.get('view') as 'grouped' | 'geographic' | 'table') || 'grouped';
+  // Check if in embed mode - with null safety
+  const isEmbedMode = searchParams?.get('embed') === 'true';
+  const locationFilter = searchParams?.get('location') || undefined;
+  const initialSection = (searchParams?.get('section') as 'organizations' | 'projects') || 'organizations';
+  const initialOrgView = (searchParams?.get('view') as 'grouped' | 'geographic' | 'table') || 'grouped';
 
   const [activeSection, setActiveSection] = useState<'organizations' | 'projects'>(initialSection);
   const [transitionDirection, setTransitionDirection] = useState<'left' | 'right'>('right');
@@ -516,5 +516,20 @@ export default function EcosystemMapPage() {
         </FocusTrap>
       )}
     </div>
+  );
+}
+
+export default function EcosystemMapPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#FBF3E7' }}>
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500 mb-4"></div>
+          <p className="text-base font-medium" style={{ color: '#4A4643' }}>Loading...</p>
+        </div>
+      </div>
+    }>
+      <EcosystemMapContent />
+    </Suspense>
   );
 }
