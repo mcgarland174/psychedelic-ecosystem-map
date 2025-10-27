@@ -97,7 +97,7 @@ export function getProposeeProblemUrl(): string {
  */
 export function getEditProblemUrl(problem: AppProblem): string {
   return buildFormUrl(FORM_URLS.editProblem, {
-    'prefill_Problem Addressed': problem.recordId, // Linked record field in Airtable
+    'prefill_Problems': problem.recordId, // Linked record field in Airtable
     'prefill_Problem Name': problem.name,
     'prefill_Problem ID': problem.problemId,
     'prefill_Description': problem.description,
