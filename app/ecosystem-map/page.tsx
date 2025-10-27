@@ -46,12 +46,49 @@ function EcosystemMapContent() {
   const [error, setError] = useState<string | null>(null);
   const [selectedOrgId, setSelectedOrgId] = useState<string | null>(null);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [showEmbedModal, setShowEmbedModal] = useState(false);
+  const [copiedEmbed, setCopiedEmbed] = useState(false);
 
   // Airtable form URLs
   const SUBMIT_ORG_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pag7exiNQcO65VQvk/form';
   const SUBMIT_PROJECT_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pageM5eDaUnswgwAN/form';
   const EDIT_ORG_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pag7ssRGDlHJylwFr/form';
   const EDIT_PROJECT_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pag6Qb3syeGlCDUni/form';
+
+  // Generate embed URL for current view
+  const getEmbedUrl = () => {
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://psychedelic-ecosystem-map.vercel.app';
+    const params = new URLSearchParams();
+    params.set('embed', 'true');
+    params.set('section', activeSection);
+
+    if (activeSection === 'organizations') {
+      params.set('view', orgView);
+    } else {
+      params.set('view', projectView);
+    }
+
+    if (locationFilter) {
+      params.set('location', locationFilter);
+    }
+
+    return `${baseUrl}/ecosystem-map?${params.toString()}`;
+  };
+
+  const getEmbedCode = () => {
+    const url = getEmbedUrl();
+    return `<iframe src="${url}" width="100%" height="600" style="border: none; border-radius: 8px;"></iframe>`;
+  };
+
+  const copyEmbedCode = async () => {
+    try {
+      await navigator.clipboard.writeText(getEmbedCode());
+      setCopiedEmbed(true);
+      setTimeout(() => setCopiedEmbed(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
 
   // Fetch ecosystem map data
   useEffect(() => {
@@ -330,18 +367,31 @@ function EcosystemMapContent() {
                           </button>
                         </nav>
 
-                        {/* Submit Organization Button */}
-                        <a
-                          href={SUBMIT_ORG_FORM_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-                          </svg>
-                          Submit Organization
-                        </a>
+                        <div className="flex gap-2">
+                          {/* Embed Button */}
+                          <button
+                            onClick={() => setShowEmbedModal(true)}
+                            className="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-bold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                            </svg>
+                            Embed
+                          </button>
+
+                          {/* Submit Organization Button */}
+                          <a
+                            href={SUBMIT_ORG_FORM_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                            </svg>
+                            Submit Organization
+                          </a>
+                        </div>
                       </div>
                     </div>
 
@@ -514,6 +564,96 @@ function EcosystemMapContent() {
             </div>
           </div>
         </FocusTrap>
+      )}
+
+      {/* Embed Modal */}
+      {showEmbedModal && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+          onClick={() => setShowEmbedModal(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h2 className="text-2xl font-bold mb-2" style={{ color: '#2B180A' }}>Embed This View</h2>
+                <p className="text-sm" style={{ color: '#4A4643' }}>Copy the code below to embed this visualization on your website</p>
+              </div>
+              <button
+                onClick={() => setShowEmbedModal(false)}
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                style={{ backgroundColor: '#F7F0E8' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#FAE6CC'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F7F0E8'}
+              >
+                <svg className="w-6 h-6" style={{ color: '#2B180A' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {/* Preview */}
+              <div>
+                <label className="block text-sm font-semibold mb-2" style={{ color: '#2B180A' }}>Preview URL:</label>
+                <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-3 font-mono text-sm break-all" style={{ color: '#4A4643' }}>
+                  {getEmbedUrl()}
+                </div>
+              </div>
+
+              {/* Embed Code */}
+              <div>
+                <label className="block text-sm font-semibold mb-2" style={{ color: '#2B180A' }}>Embed Code:</label>
+                <div className="relative">
+                  <pre className="bg-gray-900 text-gray-100 rounded-lg p-4 overflow-x-auto text-sm font-mono">
+                    {getEmbedCode()}
+                  </pre>
+                  <button
+                    onClick={copyEmbedCode}
+                    className="absolute top-3 right-3 px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg text-sm font-semibold transition-colors flex items-center gap-2"
+                  >
+                    {copiedEmbed ? (
+                      <>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                        Copy Code
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Instructions */}
+              <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
+                <h3 className="font-semibold mb-2 text-blue-900">How to use:</h3>
+                <ol className="list-decimal list-inside space-y-1 text-sm text-blue-800">
+                  <li>Copy the embed code above</li>
+                  <li>Paste it into your website's HTML</li>
+                  <li>The visualization will appear with your current filters and view settings</li>
+                </ol>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setShowEmbedModal(false)}
+                className="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-bold transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
