@@ -699,7 +699,6 @@ export default function SimpleBubbleView({
                 }}
               >
                 <option value="ecosystemRole">Ecosystem Role</option>
-                <option value="entityType">Entity Type</option>
                 <option value="organizationType">Organization Type</option>
                 <option value="state">State/Province</option>
                 <option value="country">Country</option>
@@ -737,7 +736,6 @@ export default function SimpleBubbleView({
               >
                 <option value="none">No Filter</option>
                 <option value="ecosystemRole">Ecosystem Role</option>
-                <option value="entityType">Entity Type</option>
                 <option value="organizationType">Organization Type</option>
                 <option value="state">State/Province</option>
                 <option value="country">Country</option>

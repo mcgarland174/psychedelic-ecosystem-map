@@ -32,25 +32,38 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-  const [filterRole, setFilterRole] = useState<string>('all');
-  const [filterCountry, setFilterCountry] = useState<string>('all');
+  const [filterType, setFilterType] = useState<string>('none');
+  const [filterValue, setFilterValue] = useState<string>('all');
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const allRoles = useMemo(() => {
-    const roles = new Set<string>();
-    organizations.forEach(org => {
-      org.ecosystemRole?.forEach(role => roles.add(role));
-    });
-    return Array.from(roles).sort();
-  }, [organizations]);
+  const filterOptions = useMemo(() => {
+    const options = new Set<string>();
 
-  const allCountries = useMemo(() => {
-    const countries = new Set<string>();
-    organizations.forEach(org => {
-      org.country?.forEach(country => countries.add(country));
-    });
-    return Array.from(countries).sort();
-  }, [organizations]);
+    switch (filterType) {
+      case 'ecosystemRole':
+        organizations.forEach(org => {
+          org.ecosystemRole?.forEach(role => options.add(role));
+        });
+        break;
+      case 'organizationType':
+        organizations.forEach(org => {
+          org.organizationType?.forEach(type => options.add(type));
+        });
+        break;
+      case 'state':
+        organizations.forEach(org => {
+          org.state?.forEach(state => options.add(state));
+        });
+        break;
+      case 'country':
+        organizations.forEach(org => {
+          org.country?.forEach(country => options.add(country));
+        });
+        break;
+    }
+
+    return Array.from(options).sort();
+  }, [organizations, filterType]);
 
   const filteredAndSortedOrgs = useMemo(() => {
     const filtered = organizations.filter(org => {
@@ -59,14 +72,22 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
         return false;
       }
 
-      // Role filter
-      if (filterRole !== 'all' && !org.ecosystemRole?.includes(filterRole)) {
-        return false;
-      }
-
-      // Country filter
-      if (filterCountry !== 'all' && !org.country?.includes(filterCountry)) {
-        return false;
+      // Apply filter based on type
+      if (filterType !== 'none' && filterValue !== 'all') {
+        switch (filterType) {
+          case 'ecosystemRole':
+            if (!org.ecosystemRole?.includes(filterValue)) return false;
+            break;
+          case 'organizationType':
+            if (!org.organizationType?.includes(filterValue)) return false;
+            break;
+          case 'state':
+            if (!org.state?.includes(filterValue)) return false;
+            break;
+          case 'country':
+            if (!org.country?.includes(filterValue)) return false;
+            break;
+        }
       }
 
       return true;
@@ -107,7 +128,7 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
     });
 
     return filtered;
-  }, [organizations, searchTerm, sortField, sortDirection, filterRole, filterCountry]);
+  }, [organizations, searchTerm, sortField, sortDirection, filterType, filterValue]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -173,51 +194,65 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
 
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Ecosystem Role
+                Filter By
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                   </svg>
                 </div>
                 <select
-                  value={filterRole}
-                  onChange={(e) => setFilterRole(e.target.value)}
+                  value={filterType}
+                  onChange={(e) => {
+                    setFilterType(e.target.value);
+                    setFilterValue('all');
+                  }}
                   className="w-full pl-12 pr-4 py-2.5 border-2 border-[#E9D5B8] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007F6E] focus:border-[#007F6E] transition-all hover:border-[#003B73] appearance-none bg-white font-semibold text-gray-900"
                   style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1.25rem' }}
                 >
-                  <option value="all">All Roles</option>
-                  {allRoles.map(role => (
-                    <option key={role} value={role}>{role}</option>
-                  ))}
+                  <option value="none">No Filter</option>
+                  <option value="ecosystemRole">Ecosystem Role</option>
+                  <option value="organizationType">Organization Type</option>
+                  <option value="state">State/Province</option>
+                  <option value="country">Country</option>
                 </select>
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Country
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+            {filterType !== 'none' && (
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Select {filterType === 'ecosystemRole' ? 'Role' :
+                          filterType === 'organizationType' ? 'Org Type' :
+                          filterType === 'state' ? 'State/Province' : 'Country'}
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    {(filterType === 'state' || filterType === 'country') ? (
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                      </svg>
+                    )}
+                  </div>
+                  <select
+                    value={filterValue}
+                    onChange={(e) => setFilterValue(e.target.value)}
+                    className="w-full pl-12 pr-4 py-2.5 border-2 border-[#E9D5B8] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007F6E] focus:border-[#007F6E] transition-all hover:border-[#003B73] appearance-none bg-white font-semibold text-gray-900"
+                    style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1.25rem' }}
+                  >
+                    <option value="all">All</option>
+                    {filterOptions.map(option => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select>
                 </div>
-                <select
-                  value={filterCountry}
-                  onChange={(e) => setFilterCountry(e.target.value)}
-                  className="w-full pl-12 pr-4 py-2.5 border-2 border-[#E9D5B8] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#007F6E] focus:border-[#007F6E] transition-all hover:border-[#003B73] appearance-none bg-white font-semibold text-gray-900"
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1.25rem' }}
-                >
-                  <option value="all">All Countries</option>
-                  {allCountries.map(country => (
-                    <option key={country} value={country}>{country}</option>
-                  ))}
-                </select>
               </div>
-            </div>
+            )}
           </div>
 
           <div className="mt-4 pt-4 border-t border-[#E9D5B8] flex items-center justify-between">
@@ -225,7 +260,7 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
               <span className="text-base font-semibold text-gray-900">
                 Showing <span className="font-bold text-[#007F6E]">{filteredAndSortedOrgs.length}</span> of <span className="font-bold text-[#007F6E]">{organizations.length}</span> organizations
               </span>
-              {(searchTerm || filterRole !== 'all' || filterCountry !== 'all') && (
+              {(searchTerm || (filterType !== 'none' && filterValue !== 'all')) && (
                 <span className="px-3 py-1.5 bg-gradient-to-r from-[#E6543E] to-[#A33D2C] text-white text-sm font-bold rounded-full shadow-sm animate-fadeIn">
                   Filtered
                 </span>
@@ -252,12 +287,12 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
                   </>
                 )}
               </button>
-              {(searchTerm || filterRole !== 'all' || filterCountry !== 'all') && (
+              {(searchTerm || (filterType !== 'none' && filterValue !== 'all')) && (
                 <button
                   onClick={() => {
                     setSearchTerm('');
-                    setFilterRole('all');
-                    setFilterCountry('all');
+                    setFilterType('none');
+                    setFilterValue('all');
                   }}
                   className="px-4 py-2 bg-[#E6543E] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#E6543E]/50 transition-all hover:scale-105"
                 >
@@ -280,17 +315,17 @@ export default function TableView({ organizations, onOrgClick }: TableViewProps)
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-2">No organizations found</h3>
             <p className="text-gray-600 text-center max-w-md mb-6">
-              {searchTerm || filterRole !== 'all' || filterCountry !== 'all'
+              {searchTerm || (filterType !== 'none' && filterValue !== 'all')
                 ? "No organizations match your current filters. Try adjusting your search criteria."
                 : "No organizations available to display."
               }
             </p>
-            {(searchTerm || filterRole !== 'all' || filterCountry !== 'all') && (
+            {(searchTerm || (filterType !== 'none' && filterValue !== 'all')) && (
               <button
                 onClick={() => {
                   setSearchTerm('');
-                  setFilterRole('all');
-                  setFilterCountry('all');
+                  setFilterType('none');
+                  setFilterValue('all');
                 }}
                 className="px-6 py-3 bg-gradient-to-r from-[#007F6E] to-[#003B73] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#007F6E]/30 transition-all hover:scale-105 flex items-center gap-2"
               >
