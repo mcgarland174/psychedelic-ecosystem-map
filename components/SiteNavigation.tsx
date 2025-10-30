@@ -7,7 +7,6 @@ export default function SiteNavigation() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/story', label: 'Story Mode' },
     { href: '/change-pathways', label: 'Theory of Change Explorer' },
     { href: '/framework-explorer', label: 'Strategic Elements' },
     { href: '/ecosystem-map', label: 'Ecosystem Map' },
@@ -18,7 +17,7 @@ export default function SiteNavigation() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
         <div className="flex justify-center gap-3">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || (pathname === '/' && item.href === '/story');
+            const isActive = pathname === item.href;
 
             return (
               <Link

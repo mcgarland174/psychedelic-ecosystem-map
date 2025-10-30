@@ -16,7 +16,7 @@ import FrameworkExplorer from '@/components/TheoryOfChange/FrameworkExplorer';
 import type { AppWorldview, AppOutcome, AppProblem, AppProblemCategory, AppProject } from '@/lib/data-transformer';
 
 // Top-level section types for combined navigation
-type TopSection = 'story' | 'change-pathways' | 'framework-explorer' | 'ecosystem-map';
+type TopSection = 'change-pathways' | 'framework-explorer' | 'ecosystem-map';
 
 interface Organization {
   id: string;
@@ -237,18 +237,6 @@ function ToolsPageContent() {
       <div className="bg-white border-b" style={{ borderColor: '#E6DED0' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
           <div className="flex justify-center gap-3">
-            <button
-              onClick={() => handleTopSectionChange('story')}
-              className={`px-6 py-3 rounded-full font-medium text-base transition-all duration-200
-                ${topSection === 'story' ? 'text-white shadow-md' : 'bg-white hover:bg-gray-50'}`}
-              style={{
-                backgroundColor: topSection === 'story' ? '#4A7C7E' : undefined,
-                color: topSection !== 'story' ? '#2B1810' : undefined,
-                border: topSection !== 'story' ? '1px solid #E6DED0' : undefined
-              }}
-            >
-              Story Mode
-            </button>
             <button
               onClick={() => handleTopSectionChange('change-pathways')}
               className={`px-6 py-3 rounded-full font-medium text-base transition-all duration-200
@@ -634,16 +622,7 @@ function ToolsPageContent() {
       </>
       )}
 
-      {/* OTHER SECTIONS (Placeholders) */}
-      {topSection === 'story' && (
-        <main className="flex-1 flex items-center justify-center p-16">
-          <div className="bg-white rounded-3xl shadow-sm border p-16 text-center max-w-2xl" style={{ borderColor: '#E6DED0' }}>
-            <h2 className="text-4xl font-bold mb-4" style={{ color: '#2B1810' }}>Story Mode</h2>
-            <p className="text-base leading-relaxed" style={{ color: '#6B5B4F' }}>Coming Soon</p>
-          </div>
-        </main>
-      )}
-
+      {/* OTHER SECTIONS */}
       {topSection === 'change-pathways' && (
         <>
           {tocLoading && (
