@@ -13,6 +13,7 @@ import ProjectDetailPanel from '@/components/ProjectDetailPanel';
 import TermTooltip from '@/components/TermTooltip';
 import ChangePathways from '@/components/TheoryOfChange/ChangePathways';
 import FrameworkExplorer from '@/components/TheoryOfChange/FrameworkExplorer';
+import PSIHeader from '@/components/PSIHeader';
 import type { AppWorldview, AppOutcome, AppProblem, AppProblemCategory, AppProject } from '@/lib/data-transformer';
 
 // Top-level section types for combined navigation
@@ -233,6 +234,9 @@ function ToolsPageContent() {
 
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
+      {/* PSI Header */}
+      <PSIHeader />
+
       {/* Top-Level Navigation (New Layer) */}
       <div className="bg-white border-b" style={{ borderColor: '#E6DED0' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
