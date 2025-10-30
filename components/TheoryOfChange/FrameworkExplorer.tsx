@@ -389,7 +389,7 @@ export default function FrameworkExplorer({
           {/* Compact Header */}
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: PRIMARY.deepBrown }}>
-              Framework Explorer
+              Strategic Elements
             </h2>
             <p className="text-base max-w-2xl mx-auto" style={{ color: LIGHT_TEXT.secondary }}>
               Discover and explore the building blocks of change

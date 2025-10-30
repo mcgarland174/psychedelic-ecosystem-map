@@ -27,7 +27,7 @@ export default function FrameworkExplorerPage() {
         setData(json);
       } catch (error) {
         console.error('Error fetching ToC data:', error);
-        setError('Unable to load Framework Explorer data. Please try again.');
+        setError('Unable to load Strategic Elements data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -43,7 +43,7 @@ export default function FrameworkExplorerPage() {
         <div className="flex items-center justify-center h-[calc(100vh-100px)]">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500 mb-4"></div>
-            <p className="text-base font-medium" style={{ color: '#4A4643' }}>Loading Framework Explorer...</p>
+            <p className="text-base font-medium" style={{ color: '#4A4643' }}>Loading Strategic Elements...</p>
           </div>
         </div>
       </div>

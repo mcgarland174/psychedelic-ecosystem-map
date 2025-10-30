@@ -9,7 +9,7 @@ export default function SiteNavigation() {
   const navItems = [
     { href: '/story', label: 'Story Mode' },
     { href: '/change-pathways', label: 'Theory of Change Explorer' },
-    { href: '/framework-explorer', label: 'Framework Explorer' },
+    { href: '/framework-explorer', label: 'Strategic Elements' },
     { href: '/ecosystem-map', label: 'Ecosystem Map' },
   ];
 

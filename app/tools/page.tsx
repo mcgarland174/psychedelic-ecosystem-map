@@ -271,7 +271,7 @@ function ToolsPageContent() {
                 border: topSection !== 'framework-explorer' ? '1px solid #E6DED0' : undefined
               }}
             >
-              Framework Explorer
+              Strategic Elements
             </button>
             <button
               onClick={() => handleTopSectionChange('ecosystem-map')}
@@ -696,7 +696,7 @@ function ToolsPageContent() {
                   <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
                   <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
                 </div>
-                <p className="text-base mt-4" style={{ color: '#6B5B4F' }}>Loading Framework Explorer...</p>
+                <p className="text-base mt-4" style={{ color: '#6B5B4F' }}>Loading Strategic Elements...</p>
               </div>
             </main>
           )}
