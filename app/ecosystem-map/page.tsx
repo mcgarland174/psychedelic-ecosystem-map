@@ -145,10 +145,6 @@ function EcosystemMapContent() {
           );
         }
 
-        console.log('✅ Fetched data:', {
-          organizations: orgsData.length,
-          projects: projectsData.length
-        });
         setOrganizations(orgsData);
         setProjects(projectsData);
         setError(null);
