@@ -45,11 +45,17 @@ function EcosystemMapContent() {
   const [orgView, setOrgView] = useState<'grouped' | 'geographic' | 'table'>(initialOrgView);
   const [projectView, setProjectView] = useState<'grouped' | 'geographic' | 'directory'>('grouped');
 
-  // Chart visualization controls
+  // Chart visualization controls - if location filter is present, default to state filtering
   const [chartType, setChartType] = useState<'bubble' | 'bar'>(initialChartType);
-  const [groupBy, setGroupBy] = useState<'ecosystemRole' | 'entityType' | 'organizationType' | 'state' | 'country'>(initialGroupBy);
-  const [filterType, setFilterType] = useState<string>(initialFilterType);
-  const [filterValue, setFilterValue] = useState<string>(initialFilterValue);
+  const [groupBy, setGroupBy] = useState<'ecosystemRole' | 'entityType' | 'organizationType' | 'state' | 'country'>(
+    locationFilter ? 'state' : initialGroupBy
+  );
+  const [filterType, setFilterType] = useState<string>(
+    locationFilter ? 'state' : initialFilterType
+  );
+  const [filterValue, setFilterValue] = useState<string>(
+    locationFilter ? locationFilter.charAt(0).toUpperCase() + locationFilter.slice(1).toLowerCase() : initialFilterValue
+  );
 
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
@@ -139,6 +145,10 @@ function EcosystemMapContent() {
           );
         }
 
+        console.log('✅ Fetched data:', {
+          organizations: orgsData.length,
+          projects: projectsData.length
+        });
         setOrganizations(orgsData);
         setProjects(projectsData);
         setError(null);
@@ -223,10 +233,24 @@ function EcosystemMapContent() {
               <div className="text-center mb-4">
                 <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 animate-slideUp" style={{ color: '#2B180A' }}>
                   Psychedelic Ecosystem Map
+                  {locationFilter && (
+                    <span className="ml-3 inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-teal-100 text-teal-800 border-2 border-teal-300 animate-slideUp" style={{ animationDelay: '0.2s' }}>
+                      <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      {locationFilter.charAt(0).toUpperCase() + locationFilter.slice(1).toLowerCase()}
+                    </span>
+                  )}
                 </h1>
                 <div className="text-xs md:text-sm max-w-xl mx-auto mb-4 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.5' }}>
                   Explore the interconnected network of <span className="inline-flex items-center gap-1"><span>organizations</span><TermTooltip term="ecosystem-role" iconSize={14} /></span>, projects, and programs
                   shaping the future of psychedelic research and therapy
+                  {locationFilter && (
+                    <span className="block mt-2 text-teal-700 font-medium">
+                      Showing results for {locationFilter.charAt(0).toUpperCase() + locationFilter.slice(1).toLowerCase()}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

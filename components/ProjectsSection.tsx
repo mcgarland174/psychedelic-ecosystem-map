@@ -28,6 +28,15 @@ export default function ProjectsSection({ projects, activeView, onProjectClick }
   const [searchTerm, setSearchTerm] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  // Debug logging
+  console.log('📊 ProjectsSection received:', {
+    projectCount: projects.length,
+    activeView,
+    groupBy,
+    filterType,
+    filterValue
+  });
+
   // Get filter options based on selected filter type
   const filterOptions = useMemo(() => {
     const options = new Set<string>();
@@ -61,10 +70,11 @@ export default function ProjectsSection({ projects, activeView, onProjectClick }
   // Apply filters
   const filteredProjects = useMemo(() => {
     if (filterType === 'none' || filterValue === 'all') {
+      console.log('🔍 No filter applied, returning all projects:', projects.length);
       return projects;
     }
 
-    return projects.filter(project => {
+    const filtered = projects.filter(project => {
       switch (filterType) {
         case 'priorityArea':
           return project.priorityArea === filterValue;
@@ -78,6 +88,8 @@ export default function ProjectsSection({ projects, activeView, onProjectClick }
           return true;
       }
     });
+    console.log('🔍 Filter applied, filtered projects:', filtered.length);
+    return filtered;
   }, [projects, filterType, filterValue]);
 
   // Search filtered projects for directory view
