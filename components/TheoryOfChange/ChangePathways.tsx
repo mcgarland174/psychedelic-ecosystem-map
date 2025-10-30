@@ -475,7 +475,7 @@ export default function ChangePathways({
                 </div>
                 <div>
                   <h2 className="text-3xl font-bold" style={{ color: PRIMARY.deepBrown }}>
-                    How to Use Change Pathways
+                    How to Use Theory of Change Explorer
                   </h2>
                   <p className="mt-1" style={{ color: LIGHT_TEXT.secondary }}>
                     Trace your path from worldview to solution

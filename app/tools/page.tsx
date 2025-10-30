@@ -259,7 +259,7 @@ function ToolsPageContent() {
                 border: topSection !== 'change-pathways' ? '1px solid #E6DED0' : undefined
               }}
             >
-              Change Pathways
+              Theory of Change Explorer
             </button>
             <button
               onClick={() => handleTopSectionChange('framework-explorer')}
@@ -653,7 +653,7 @@ function ToolsPageContent() {
                   <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
                   <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
                 </div>
-                <p className="text-base mt-4" style={{ color: '#6B5B4F' }}>Loading Change Pathways...</p>
+                <p className="text-base mt-4" style={{ color: '#6B5B4F' }}>Loading Theory of Change Explorer...</p>
               </div>
             </main>
           )}

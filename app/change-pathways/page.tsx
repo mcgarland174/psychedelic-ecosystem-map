@@ -27,7 +27,7 @@ export default function ChangePathwaysPage() {
         setData(json);
       } catch (error) {
         console.error('Error fetching ToC data:', error);
-        setError('Unable to load Change Pathways data. Please try again.');
+        setError('Unable to load Theory of Change Explorer data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -43,7 +43,7 @@ export default function ChangePathwaysPage() {
         <div className="flex items-center justify-center h-[calc(100vh-100px)]">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500 mb-4"></div>
-            <p className="text-base font-medium" style={{ color: '#4A4643' }}>Loading Change Pathways...</p>
+            <p className="text-base font-medium" style={{ color: '#4A4643' }}>Loading Theory of Change Explorer...</p>
           </div>
         </div>
       </div>
