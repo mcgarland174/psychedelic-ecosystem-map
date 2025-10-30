@@ -275,7 +275,7 @@ export async function getProjects(): Promise<Project[]> {
   try {
     await base('Projects')
       .select({
-        view: 'Online_Ecosystem_Map', // Pulling from the Online_Ecosystem_Map view in Airtable
+        view: 'Grid view', // Using Grid view until Online_Ecosystem_Map view is created in Projects table
         fields: [
           'Project Name',
           'Project Description',
