@@ -543,7 +543,7 @@ export default function ProjectBubbleView({ projects, groupBy, onProjectClick }:
         </p>
       </div>
 
-      <div className="relative bg-gradient-to-br from-[#F5EBDD] to-[#F7DCC3] rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-2 border-[#E9D5B8]" style={{ minHeight: '600px', boxShadow: '0 10px 15px -3px rgba(0, 127, 110, 0.15), 0 4px 6px -2px rgba(0, 127, 110, 0.05)' }}>
+      <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-2" style={{ minHeight: '600px', background: '#FFFFFF', borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.15), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
         <svg
           ref={svgRef}
           width={dimensions.width}
