@@ -31,23 +31,18 @@ interface SimpleBubbleViewProps {
 
 type GroupingField = 'ecosystemRole' | 'entityType' | 'organizationType' | 'state' | 'country';
 
-// Brand color palette - vibrant, bold colors with strong visual impact
+// Brand color palette - soft pastels with elegant gradients
 const BRAND_COLORS = [
-  '#007F6E', // teal
-  '#E6543E', // red
-  '#F4B63A', // yellow
-  '#47A8E0', // skyBlue
-  '#003B73', // blue
-  '#A33D2C', // brickRed
-  '#8B4789', // purple
-  '#2D8B57', // seaGreen
-  '#D97706', // amber
-  '#059669', // emerald
-  '#7C3AED', // violet
-  '#DC2626', // crimson
-  '#0891B2', // cyan
-  '#4F46E5', // indigo
-  '#EA580C', // deepOrange
+  '#B8E6DB', // soft mint
+  '#F5D9A8', // soft peach
+  '#C8E6E6', // powder blue
+  '#FFE4B5', // moccasin
+  '#D4EBE6', // pale teal
+  '#FFE7CC', // pale apricot
+  '#BCE3D7', // seafoam
+  '#FFF0D9', // cream
+  '#A8D8D8', // light aqua
+  '#FFD9A8', // light sand
 ];
 
 export default function SimpleBubbleView({
