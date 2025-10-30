@@ -241,7 +241,7 @@ function EcosystemMapContent() {
                 </h1>
                 <div className="text-xs md:text-sm max-w-xl mx-auto mb-4 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.5' }}>
                   Explore the interconnected network of <span className="inline-flex items-center gap-1"><span>organizations</span><TermTooltip term="ecosystem-role" iconSize={14} /></span>, projects, and programs
-                  shaping the future of psychedelic research and therapy
+                  shaping the future of psychedelics.
                   {locationFilter && (
                     <span className="block mt-2 text-teal-700 font-medium">
                       Showing results for {locationFilter.charAt(0).toUpperCase() + locationFilter.slice(1).toLowerCase()}

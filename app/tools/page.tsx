@@ -42,10 +42,13 @@ function ToolsPageContent() {
   const [topSection, setTopSection] = useState<TopSection>(initialTopSection);
 
   // Original ecosystem map state (preserved exactly)
-  const [activeSection, setActiveSection] = useState<'organizations' | 'projects'>('organizations');
+  const initialTab = (searchParams.get('tab') as 'organizations' | 'projects') || 'organizations';
+  const [activeSection, setActiveSection] = useState<'organizations' | 'projects'>(initialTab);
   const [transitionDirection, setTransitionDirection] = useState<'left' | 'right'>('right');
-  const [orgView, setOrgView] = useState<'grouped' | 'geographic' | 'table'>('grouped');
-  const [projectView, setProjectView] = useState<'grouped' | 'geographic' | 'directory'>('grouped');
+  const initialOrgView = (searchParams.get('orgView') as 'grouped' | 'geographic' | 'table') || 'grouped';
+  const [orgView, setOrgView] = useState<'grouped' | 'geographic' | 'table'>(initialOrgView);
+  const initialProjectView = (searchParams.get('projectView') as 'grouped' | 'geographic' | 'directory') || 'grouped';
+  const [projectView, setProjectView] = useState<'grouped' | 'geographic' | 'directory'>(initialProjectView);
   const [organizations, setOrganizations] = useState<Organization[]>([]);
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -70,11 +73,52 @@ function ToolsPageContent() {
     router.push(`/tools?section=${section}`, { scroll: false });
   };
 
+  // Handle tab changes with URL update
+  const handleTabChange = (tab: 'organizations' | 'projects', direction: 'left' | 'right') => {
+    setTransitionDirection(direction);
+    setActiveSection(tab);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', tab);
+    router.push(`/tools?${params.toString()}`, { scroll: false });
+  };
+
+  // Handle view changes with URL update
+  const handleOrgViewChange = (view: 'grouped' | 'geographic' | 'table') => {
+    setOrgView(view);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('orgView', view);
+    router.push(`/tools?${params.toString()}`, { scroll: false });
+  };
+
+  const handleProjectViewChange = (view: 'grouped' | 'geographic' | 'directory') => {
+    setProjectView(view);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('projectView', view);
+    router.push(`/tools?${params.toString()}`, { scroll: false });
+  };
+
   // Airtable form URLs
   const SUBMIT_ORG_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pag7exiNQcO65VQvk/form'; // For submitting new organizations
   const SUBMIT_PROJECT_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pageM5eDaUnswgwAN/form'; // For submitting new projects
   const EDIT_ORG_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pag7ssRGDlHJylwFr/form'; // For editing existing organizations
   const EDIT_PROJECT_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pag6Qb3syeGlCDUni/form'; // For editing existing projects
+
+  // Sync URL parameters with state on navigation
+  useEffect(() => {
+    const tab = searchParams.get('tab') as 'organizations' | 'projects' | null;
+    const orgViewParam = searchParams.get('orgView') as 'grouped' | 'geographic' | 'table' | null;
+    const projectViewParam = searchParams.get('projectView') as 'grouped' | 'geographic' | 'directory' | null;
+
+    if (tab && tab !== activeSection) {
+      setActiveSection(tab);
+    }
+    if (orgViewParam && orgViewParam !== orgView) {
+      setOrgView(orgViewParam);
+    }
+    if (projectViewParam && projectViewParam !== projectView) {
+      setProjectView(projectViewParam);
+    }
+  }, [searchParams]);
 
   // Fetch ecosystem map data
   useEffect(() => {
@@ -261,7 +305,7 @@ function ToolsPageContent() {
             </h1>
             <div className="text-xs md:text-sm max-w-xl mx-auto mb-4 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.5' }}>
               Explore the interconnected network of <span className="inline-flex items-center gap-1"><span>organizations</span><TermTooltip term="ecosystem-role" iconSize={14} /></span>, projects, and programs
-              shaping the future of psychedelic research and therapy
+              shaping the future of psychedelics.
             </div>
           </div>
 
@@ -276,10 +320,7 @@ function ToolsPageContent() {
             {/* Tab Navigation */}
             <div className="flex border-b-2" style={{ borderColor: '#E6C8A1', background: 'linear-gradient(to right, #FBF3E7, #F7F0E8)' }}>
               <button
-                onClick={() => {
-                  setTransitionDirection('left');
-                  setActiveSection('organizations');
-                }}
+                onClick={() => handleTabChange('organizations', 'left')}
                 className={`
                   flex-1 px-6 py-4 font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 min-h-[60px]
                   hover:scale-105 active:scale-95
@@ -303,10 +344,7 @@ function ToolsPageContent() {
               </button>
 
               <button
-                onClick={() => {
-                  setTransitionDirection('right');
-                  setActiveSection('projects');
-                }}
+                onClick={() => handleTabChange('projects', 'right')}
                 className={`
                   flex-1 px-6 py-4 font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 min-h-[60px]
                   hover:scale-105 active:scale-95
@@ -344,7 +382,7 @@ function ToolsPageContent() {
                       <div className="flex items-center justify-between px-6 py-3">
                         <nav className="flex space-x-2" aria-label="Views">
                           <button
-                            onClick={() => setOrgView('grouped')}
+                            onClick={() => handleOrgViewChange('grouped')}
                             className={`
                               px-6 py-3 rounded-xl font-semibold text-sm min-h-[44px]
                               transition-all duration-300 flex items-center gap-2
@@ -367,7 +405,7 @@ function ToolsPageContent() {
                           </button>
 
                           <button
-                            onClick={() => setOrgView('geographic')}
+                            onClick={() => handleOrgViewChange('geographic')}
                             className={`
                               px-6 py-3 rounded-xl font-semibold text-sm min-h-[44px]
                               transition-all duration-300 flex items-center gap-2
@@ -387,7 +425,7 @@ function ToolsPageContent() {
                           </button>
 
                           <button
-                            onClick={() => setOrgView('table')}
+                            onClick={() => handleOrgViewChange('table')}
                             className={`
                               px-6 py-3 rounded-xl font-semibold text-sm min-h-[44px]
                               transition-all duration-300 flex items-center gap-2
@@ -450,7 +488,7 @@ function ToolsPageContent() {
                       <div className="flex items-center justify-between px-6 py-3">
                         <nav className="flex space-x-2" aria-label="Views">
                           <button
-                            onClick={() => setProjectView('grouped')}
+                            onClick={() => handleProjectViewChange('grouped')}
                             className={`
                               px-6 py-3 rounded-xl font-semibold text-sm min-h-[44px]
                               transition-all duration-300 flex items-center gap-2
@@ -473,7 +511,7 @@ function ToolsPageContent() {
                           </button>
 
                           <button
-                            onClick={() => setProjectView('geographic')}
+                            onClick={() => handleProjectViewChange('geographic')}
                             className={`
                               px-6 py-3 rounded-xl font-semibold text-sm min-h-[44px]
                               transition-all duration-300 flex items-center gap-2
@@ -493,7 +531,7 @@ function ToolsPageContent() {
                           </button>
 
                           <button
-                            onClick={() => setProjectView('directory')}
+                            onClick={() => handleProjectViewChange('directory')}
                             className={`
                               px-6 py-3 rounded-xl font-semibold text-sm min-h-[44px]
                               transition-all duration-300 flex items-center gap-2
@@ -530,7 +568,7 @@ function ToolsPageContent() {
 
                     {/* View Content */}
                     <div className="p-8 bg-white">
-                      <ProjectsSection projects={projects} activeView={projectView} onProjectClick={setSelectedProjectId} />
+                      <ProjectsSection projects={projects} activeView={projectView} onProjectClick={setSelectedProjectId} submitProjectUrl={SUBMIT_PROJECT_FORM_URL} />
                     </div>
                   </div>
                 </div>

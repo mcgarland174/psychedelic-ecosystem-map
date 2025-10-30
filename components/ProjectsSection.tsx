@@ -19,9 +19,10 @@ interface ProjectsSectionProps {
   projects: Project[];
   activeView: 'grouped' | 'geographic' | 'directory';
   onProjectClick?: (projectId: string) => void;
+  submitProjectUrl?: string;
 }
 
-export default function ProjectsSection({ projects, activeView, onProjectClick }: ProjectsSectionProps) {
+export default function ProjectsSection({ projects, activeView, onProjectClick, submitProjectUrl }: ProjectsSectionProps) {
   const [groupBy, setGroupBy] = useState<'priorityArea' | 'typeOfProject' | 'geographicLocation' | 'status'>('priorityArea');
   const [filterType, setFilterType] = useState<string>('none');
   const [filterValue, setFilterValue] = useState<string>('all');
@@ -196,20 +197,94 @@ export default function ProjectsSection({ projects, activeView, onProjectClick }
               </div>
 
               {/* Bubble Visualization */}
-              <ProjectBubbleView
-                projects={filteredProjects}
-                groupBy={groupBy}
-                onProjectClick={onProjectClick}
-              />
+              {filteredProjects.length === 0 ? (
+                <div className="bg-white rounded-xl shadow-lg border-2 border-[#E9D5B8] p-12">
+                  <div className="flex flex-col items-center justify-center py-20 px-6">
+                    <div className="w-24 h-24 mb-6 bg-gradient-to-br from-[#F5EBDD] to-[#F7DCC3] rounded-full flex items-center justify-center">
+                      <svg className="w-12 h-12 text-[#003B73]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">No projects found</h3>
+                    <p className="text-gray-600 text-center max-w-md mb-6">
+                      {filterType !== 'none' && filterValue !== 'all'
+                        ? "No projects match your current filters. Try adjusting your search criteria."
+                        : "No projects available to display. Be the first to add a project!"
+                      }
+                    </p>
+                    {filterType !== 'none' && filterValue !== 'all' ? (
+                      <button
+                        onClick={() => {
+                          setFilterType('none');
+                          setFilterValue('all');
+                        }}
+                        className="px-6 py-3 bg-gradient-to-r from-[#007F6E] to-[#003B73] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#007F6E]/30 transition-all hover:scale-105 flex items-center gap-2"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Clear All Filters
+                      </button>
+                    ) : submitProjectUrl ? (
+                      <a
+                        href={submitProjectUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-6 py-3 bg-gradient-to-r from-[#007F6E] to-[#003B73] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#007F6E]/30 transition-all hover:scale-105 flex items-center gap-2"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        Submit Project
+                      </a>
+                    ) : null}
+                  </div>
+                </div>
+              ) : (
+                <ProjectBubbleView
+                  projects={filteredProjects}
+                  groupBy={groupBy}
+                  onProjectClick={onProjectClick}
+                />
+              )}
             </div>
           )}
 
           {/* Geographic View */}
           {activeView === 'geographic' && (
-            <ProjectGeographicView
-              projects={filteredProjects}
-              onProjectClick={onProjectClick}
-            />
+            projects.length === 0 ? (
+              <div className="bg-white rounded-xl shadow-lg border-2 border-[#E9D5B8] p-12">
+                <div className="flex flex-col items-center justify-center py-20 px-6">
+                  <div className="w-24 h-24 mb-6 bg-gradient-to-br from-[#F5EBDD] to-[#F7DCC3] rounded-full flex items-center justify-center">
+                    <svg className="w-12 h-12 text-[#003B73]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">No projects found</h3>
+                  <p className="text-gray-600 text-center max-w-md mb-6">
+                    No projects available to display. Be the first to add a project!
+                  </p>
+                  {submitProjectUrl && (
+                    <a
+                      href={submitProjectUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-6 py-3 bg-gradient-to-r from-[#007F6E] to-[#003B73] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#007F6E]/30 transition-all hover:scale-105 flex items-center gap-2"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Submit Project
+                    </a>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <ProjectGeographicView
+                projects={filteredProjects}
+                onProjectClick={onProjectClick}
+              />
+            )
           )}
 
           {/* Directory View */}
@@ -355,10 +430,10 @@ export default function ProjectsSection({ projects, activeView, onProjectClick }
                     <p className="text-gray-600 text-center max-w-md mb-6">
                       {searchTerm || filterType !== 'none'
                         ? "No projects match your current filters. Try adjusting your search criteria."
-                        : "No projects available to display."
+                        : "No projects available to display. Be the first to add a project!"
                       }
                     </p>
-                    {(searchTerm || filterType !== 'none') && (
+                    {(searchTerm || filterType !== 'none') ? (
                       <button
                         onClick={() => {
                           setSearchTerm('');
@@ -372,7 +447,19 @@ export default function ProjectsSection({ projects, activeView, onProjectClick }
                         </svg>
                         Clear All Filters
                       </button>
-                    )}
+                    ) : submitProjectUrl ? (
+                      <a
+                        href={submitProjectUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-6 py-3 bg-gradient-to-r from-[#007F6E] to-[#003B73] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#007F6E]/30 transition-all hover:scale-105 flex items-center gap-2"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        Submit Project
+                      </a>
+                    ) : null}
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
