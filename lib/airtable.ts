@@ -155,7 +155,7 @@ export async function getOrganizations(): Promise<Organization[]> {
 
   await base('Organizations')
     .select({
-      view: 'Grid view',
+      view: 'Online_Ecosystem_Map', // Pulling from the Online_Ecosystem_Map view in Airtable
       fields: [
         'Organization Name',
         'Organization Type',
@@ -178,31 +178,27 @@ export async function getOrganizations(): Promise<Organization[]> {
     })
     .eachPage((records, fetchNextPage) => {
       records.forEach((record) => {
-        const showOnline = record.get('Show Online') as string;
-
-        // Only include orgs where Show Online is "yes" or blank (not "no")
-        if (showOnline?.toLowerCase() !== 'no') {
-          orgs.push({
-            id: record.id,
-            name: record.get('Organization Name') as string || 'Unnamed Organization',
-            organizationType: record.get('Organization Type') as string[],
-            entityType: record.get('Entity Type') as string,
-            ecosystemRole: record.get('Ecosystem Role') as string[],
-            website: record.get('Website') as string,
-            city: record.get('City') as string,
-            state: record.get('State / Province') as string[],
-            country: record.get('Country') as string[],
-            affiliatedPeople: record.get('Affiliated People') as string[],
-            orgToOrgAffiliations: record.get('Org to Org Affiliations') as string[],
-            showOnline: showOnline,
-            descriptionOfActivities: record.get('Description of Activities') as string,
-            projects: record.get('Projects') as string[],
-            areaOfFocus: record.get('Area of Focus') as string[],
-            substanceOfFocus: record.get('Substance of Focus') as string[],
-            populationServed: record.get('Population Served') as string[],
-            verified: record.get('Verified') as boolean,
-          });
-        }
+        // Now the Airtable view controls what's visible - no filtering here
+        orgs.push({
+          id: record.id,
+          name: record.get('Organization Name') as string || 'Unnamed Organization',
+          organizationType: record.get('Organization Type') as string[],
+          entityType: record.get('Entity Type') as string,
+          ecosystemRole: record.get('Ecosystem Role') as string[],
+          website: record.get('Website') as string,
+          city: record.get('City') as string,
+          state: record.get('State / Province') as string[],
+          country: record.get('Country') as string[],
+          affiliatedPeople: record.get('Affiliated People') as string[],
+          orgToOrgAffiliations: record.get('Org to Org Affiliations') as string[],
+          showOnline: record.get('Show Online') as string,
+          descriptionOfActivities: record.get('Description of Activities') as string,
+          projects: record.get('Projects') as string[],
+          areaOfFocus: record.get('Area of Focus') as string[],
+          substanceOfFocus: record.get('Substance of Focus') as string[],
+          populationServed: record.get('Population Served') as string[],
+          verified: record.get('Verified') as boolean,
+        });
       });
       fetchNextPage();
     });
@@ -274,7 +270,7 @@ export async function getProjects(): Promise<Project[]> {
   try {
     await base('Projects')
       .select({
-        view: 'Grid view',
+        view: 'Online_Ecosystem_Map', // Pulling from the Online_Ecosystem_Map view in Airtable
         fields: [
           'Project Name',
           'Project Description',
@@ -305,38 +301,34 @@ export async function getProjects(): Promise<Project[]> {
       })
       .eachPage((records, fetchNextPage) => {
         records.forEach((record) => {
-          const showOnline = record.get('Show Online') as string;
-
-          // Only include projects where Show Online is "yes" or blank (not "no")
-          if (showOnline?.toLowerCase() !== 'no') {
-            projects.push({
-              id: record.id,
-              name: record.get('Project Name') as string || 'Unnamed Project',
-              description: record.get('Project Description') as string,
-              priorityArea: record.get('Priority Area') as string,
-              typeOfProject: record.get('Type of Project') as string[],
-              geographicLocation: record.get('Geographic Location') as string[],
-              status: record.get('Status') as string,
-              associatedOrganizations: record.get('Associated Organization(s)') as string[],
-              peopleInvolved: record.get('People Involved') as string[],
-              teamLead: record.get('Team Lead') as string[],
-              activelyFundraising: record.get('Actively fundraising?') as string,
-              amountRaisedToDate: record.get('Amount raised to date') as number,
-              amountSeeking: record.get('Amount seeking') as number,
-              expectedAnnualRevenue: record.get('Expected annual revenue') as string,
-              willGenerateRevenue: record.get('Will this project generate revenue?') as string,
-              projectStartDate: record.get('Project Start Date') as string,
-              expectedCompletionDate: record.get('Expected Completion Date') as string,
-              sustainabilityTimeline: record.get('Sustainability Timeline') as string[],
-              currentProgress: record.get('Current Progress') as string,
-              describeCurrentProgress: record.get('Describe current progress') as string,
-              projectMilestones: record.get('Project Milestones') as string,
-              expectedImpact: record.get('Expected/target impact + metrics') as string,
-              website: record.get('Website') as string,
-              projectFunders: record.get('Project Funders') as string,
-              addressedProblems: record.get('Addressed Problems') as string[],
-            });
-          }
+          // Now the Airtable view controls what's visible - no filtering here
+          projects.push({
+            id: record.id,
+            name: record.get('Project Name') as string || 'Unnamed Project',
+            description: record.get('Project Description') as string,
+            priorityArea: record.get('Priority Area') as string,
+            typeOfProject: record.get('Type of Project') as string[],
+            geographicLocation: record.get('Geographic Location') as string[],
+            status: record.get('Status') as string,
+            associatedOrganizations: record.get('Associated Organization(s)') as string[],
+            peopleInvolved: record.get('People Involved') as string[],
+            teamLead: record.get('Team Lead') as string[],
+            activelyFundraising: record.get('Actively fundraising?') as string,
+            amountRaisedToDate: record.get('Amount raised to date') as number,
+            amountSeeking: record.get('Amount seeking') as number,
+            expectedAnnualRevenue: record.get('Expected annual revenue') as string,
+            willGenerateRevenue: record.get('Will this project generate revenue?') as string,
+            projectStartDate: record.get('Project Start Date') as string,
+            expectedCompletionDate: record.get('Expected Completion Date') as string,
+            sustainabilityTimeline: record.get('Sustainability Timeline') as string[],
+            currentProgress: record.get('Current Progress') as string,
+            describeCurrentProgress: record.get('Describe current progress') as string,
+            projectMilestones: record.get('Project Milestones') as string,
+            expectedImpact: record.get('Expected/target impact + metrics') as string,
+            website: record.get('Website') as string,
+            projectFunders: record.get('Project Funders') as string,
+            addressedProblems: record.get('Addressed Problems') as string[],
+          });
         });
         fetchNextPage();
       });
