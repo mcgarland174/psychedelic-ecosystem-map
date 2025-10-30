@@ -31,23 +31,23 @@ interface SimpleBubbleViewProps {
 
 type GroupingField = 'ecosystemRole' | 'entityType' | 'organizationType' | 'state' | 'country';
 
-// Warm Earth Tones palette - alternating between teals and golds for visual interest
+// Brand color palette - vibrant, bold colors with strong visual impact
 const BRAND_COLORS = [
-  '#317E6D', // teal (primary)
-  '#CC8D37', // gold
-  '#1F5F51', // forestTeal
-  '#E99D33', // amber
-  '#9DCDC3', // lightTeal
-  '#EFB566', // lightGold
-  '#133931', // darkTeal
-  '#F4CE99', // paleGold
-  '#2E6D6E', // tealBlue
-  '#B66A00', // bronze
-  '#3E7B6E', // mediumTeal
-  '#E48400', // brightOrange
-  '#194C41', // deepGreen
-  '#894F00', // darkBrown
-  '#48A5CC', // skyBlue (accent)
+  '#007F6E', // teal
+  '#E6543E', // red
+  '#F4B63A', // yellow
+  '#47A8E0', // skyBlue
+  '#003B73', // blue
+  '#A33D2C', // brickRed
+  '#8B4789', // purple
+  '#2D8B57', // seaGreen
+  '#D97706', // amber
+  '#059669', // emerald
+  '#7C3AED', // violet
+  '#DC2626', // crimson
+  '#0891B2', // cyan
+  '#4F46E5', // indigo
+  '#EA580C', // deepOrange
 ];
 
 export default function SimpleBubbleView({
@@ -230,7 +230,25 @@ export default function SimpleBubbleView({
 
       const nodes = pack(root).leaves();
 
-      // No gradients needed - using solid colors
+      // Create gradients for each bubble
+      const defs = svg.append('defs');
+      nodes.forEach((d: any, i: number) => {
+        const color = d.data.color;
+        const gradient = defs.append('radialGradient')
+          .attr('id', `bubble-gradient-${i}`)
+          .attr('cx', '30%')
+          .attr('cy', '30%');
+
+        gradient.append('stop')
+          .attr('offset', '0%')
+          .attr('stop-color', color)
+          .attr('stop-opacity', 0.9);
+
+        gradient.append('stop')
+          .attr('offset', '100%')
+          .attr('stop-color', color)
+          .attr('stop-opacity', 0.7);
+      });
 
       // Create groups for bubbles
       const bubbleGroups = svg
@@ -250,32 +268,22 @@ export default function SimpleBubbleView({
           }
         });
 
-      // Add circles with solid color fill and elegant pop-in animation
+      // Add circles with gradients and colored glow (with stagger animation)
       bubbleGroups
         .append('circle')
         .attr('r', 0)
-        .attr('fill', (d: any) => d.data.color)
+        .attr('fill', (d: any, i: number) => `url(#bubble-gradient-${i})`)
+        .attr('stroke', (d: any) => d.data.color)
+        .attr('stroke-width', 2)
         .style('filter', (d: any) => {
           const color = d.data.color;
-          return `drop-shadow(0 6px 16px ${color}60) drop-shadow(0 2px 6px ${color}40)`;
+          return `drop-shadow(0 0 15px ${color}80)`;
         })
         .transition()
-        .duration(1000)
-        .delay((d: any, i: number) => i * 60) // Stagger delay for cascade effect
-        .ease(d3.easeCubicOut)
-        .attr('r', (d: any) => d.r)
-        .on('end', function() {
-          // Subtle bounce at the end for playfulness
-          d3.select(this)
-            .transition()
-            .duration(200)
-            .ease(d3.easeElasticOut.amplitude(1).period(0.3))
-            .attr('r', function(d: any) { return d.r * 1.05; })
-            .transition()
-            .duration(150)
-            .ease(d3.easeQuadOut)
-            .attr('r', function(d: any) { return d.r; });
-        });
+        .duration(800)
+        .delay((d: any, i: number) => i * 50) // Stagger delay for cascade effect
+        .ease(d3.easeBackOut.overshoot(1.2))
+        .attr('r', (d: any) => d.r);
 
       // Add labels with enhanced readability
       bubbleGroups.each(function(d: any) {
@@ -284,14 +292,21 @@ export default function SimpleBubbleView({
           .attr('opacity', 0);
 
         const radius = d.r;
-        const nameFontSize = Math.max(12, Math.min(radius / 3.5, 20));
-        const countFontSize = Math.max(20, Math.min(radius / 2.2, 40));
+        // More conservative font sizing to prevent overflow
+        const nameFontSize = Math.max(10, Math.min(radius / 4, 18));
+        const countFontSize = Math.max(16, Math.min(radius / 2.5, 36));
+
+        // Only show text if bubble is large enough
+        if (radius < 25) {
+          // Too small for text, skip
+          return;
+        }
 
         // Category name - split into multiple lines if needed
         const words = d.data.key.split(' ');
         const lineHeight = nameFontSize * 1.2;
 
-        if (words.length > 2 && radius > 50) {
+        if (words.length > 2 && radius > 60) {
           // Multi-line for longer text
           const midpoint = Math.ceil(words.length / 2);
           const line1 = words.slice(0, midpoint).join(' ');
@@ -303,8 +318,7 @@ export default function SimpleBubbleView({
             .style('font-size', nameFontSize + 'px')
             .style('font-weight', '700')
             .style('letter-spacing', '0.3px')
-            .style('fill', '#FFFFFF')
-            .style('text-shadow', '0 2px 6px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.8)')
+            .style('fill', '#2B180A')
             .text(line1);
 
           textGroup.append('text')
@@ -313,8 +327,7 @@ export default function SimpleBubbleView({
             .style('font-size', nameFontSize + 'px')
             .style('font-weight', '700')
             .style('letter-spacing', '0.3px')
-            .style('fill', '#FFFFFF')
-            .style('text-shadow', '0 2px 6px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.8)')
+            .style('fill', '#2B180A')
             .text(line2);
 
           // Count below
@@ -324,20 +337,25 @@ export default function SimpleBubbleView({
             .style('font-size', countFontSize + 'px')
             .style('font-weight', '800')
             .style('letter-spacing', '0.5px')
-            .style('fill', '#FFFFFF')
-            .style('text-shadow', '0 3px 8px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.9)')
+            .style('fill', '#2B180A')
             .text(d.data.count);
         } else {
           // Single line for shorter text
+          // Truncate text if it's too long for the bubble
+          let displayText = d.data.key;
+          const maxCharsPerLine = Math.floor(radius / 5);
+          if (displayText.length > maxCharsPerLine && radius < 80) {
+            displayText = displayText.substring(0, maxCharsPerLine - 1) + '…';
+          }
+
           textGroup.append('text')
             .attr('text-anchor', 'middle')
             .attr('dy', `-${countFontSize * 0.35}px`)
             .style('font-size', nameFontSize + 'px')
             .style('font-weight', '700')
             .style('letter-spacing', '0.3px')
-            .style('fill', '#FFFFFF')
-            .style('text-shadow', '0 2px 6px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.8)')
-            .text(d.data.key);
+            .style('fill', '#2B180A')
+            .text(displayText);
 
           // Count below
           textGroup.append('text')
@@ -346,8 +364,7 @@ export default function SimpleBubbleView({
             .style('font-size', countFontSize + 'px')
             .style('font-weight', '800')
             .style('letter-spacing', '0.5px')
-            .style('fill', '#FFFFFF')
-            .style('text-shadow', '0 3px 8px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.9)')
+            .style('fill', '#2B180A')
             .text(d.data.count);
         }
 
@@ -544,7 +561,7 @@ export default function SimpleBubbleView({
             .attr('dy', '0.35em')
             .style('font-size', '12px')
             .style('font-weight', '700')
-            .style('fill', 'white')
+            .style('fill', '#2B180A')
             .text(d.count);
         })
         .transition()
@@ -821,7 +838,7 @@ export default function SimpleBubbleView({
       </div>}
 
       {/* D3 Bubble Pack Visualization */}
-      <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-2" style={{ minHeight: '600px', background: 'linear-gradient(135deg, #FBF3E7 0%, #F7F0E8 100%)', borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.15), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
+      <div className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow border-2" style={{ minHeight: '600px', background: '#FFFFFF', borderColor: '#E6C8A1', boxShadow: '0 10px 15px -3px rgba(49, 126, 109, 0.15), 0 4px 6px -2px rgba(49, 126, 109, 0.05)' }}>
         <svg
           ref={svgRef}
           width={dimensions.width}
@@ -848,16 +865,17 @@ export default function SimpleBubbleView({
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-2xl font-bold text-white">
+                  <h3 className="text-2xl font-bold" style={{ color: '#2B180A' }}>
                     {expandedBubble}
                   </h3>
-                  <p className="text-sm text-white/90 mt-1">
+                  <p className="text-sm mt-1" style={{ color: '#4A4643' }}>
                     {expandedData.count} organization{expandedData.count !== 1 ? 's' : ''}
                   </p>
                 </div>
                 <button
                   onClick={() => setExpandedBubble(null)}
-                  className="text-white/80 hover:text-white transition-colors hover:scale-110 transform"
+                  className="transition-colors hover:scale-110 transform"
+                  style={{ color: '#2B180A' }}
                 >
                   <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -898,8 +916,8 @@ export default function SimpleBubbleView({
                         {org.ecosystemRole.slice(0, 2).map((role, idx) => (
                           <span
                             key={idx}
-                            className="inline-block px-2 py-0.5 text-xs rounded-full font-medium shadow-sm text-white"
-                            style={{ backgroundColor: expandedData.color }}
+                            className="inline-block px-2 py-0.5 text-xs rounded-full font-medium shadow-sm"
+                            style={{ backgroundColor: expandedData.color, color: '#2B180A' }}
                           >
                             {role.split(' ')[0]}
                           </span>
