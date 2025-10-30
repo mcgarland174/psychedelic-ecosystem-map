@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import PSIHeader from '@/components/PSIHeader';
 import SiteNavigation from '@/components/SiteNavigation';
 import ChangePathways from '@/components/TheoryOfChange/ChangePathways';
 import type { AppWorldview, AppOutcome, AppProblemCategory, AppProblem, AppProject } from '@/lib/data-transformer';
@@ -39,6 +40,7 @@ export default function ChangePathwaysPage() {
   if (loading) {
     return (
       <div className="min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
+        <PSIHeader />
         <SiteNavigation />
         <div className="flex items-center justify-center h-[calc(100vh-100px)]">
           <div className="text-center">
@@ -53,6 +55,7 @@ export default function ChangePathwaysPage() {
   if (error || !data) {
     return (
       <div className="min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
+        <PSIHeader />
         <SiteNavigation />
         <div className="flex flex-col items-center justify-center h-[calc(100vh-100px)] gap-4 px-4">
           <div className="w-24 h-24 mb-4 bg-red-100 rounded-full flex items-center justify-center">
@@ -75,6 +78,7 @@ export default function ChangePathwaysPage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
+      <PSIHeader />
       <SiteNavigation />
       <ChangePathways
         worldviews={data.worldviews}
