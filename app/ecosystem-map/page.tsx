@@ -4,7 +4,6 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import FocusTrap from 'focus-trap-react';
 import PSIHeader from '@/components/PSIHeader';
-import SiteNavigation from '@/components/SiteNavigation';
 import SimpleBubbleView from '@/components/SimpleBubbleView';
 import GeographicCompositionView from '@/components/GeographicCompositionView';
 import TableView from '@/components/TableView';
@@ -182,7 +181,6 @@ function EcosystemMapContent() {
     return (
       <div className="min-h-screen" style={{ backgroundColor: isEmbedMode ? 'transparent' : '#FBF3E7' }}>
         {!isEmbedMode && <PSIHeader />}
-        {!isEmbedMode && <SiteNavigation />}
         <div className="flex items-center justify-center h-[calc(100vh-100px)]">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500 mb-4"></div>
@@ -197,7 +195,6 @@ function EcosystemMapContent() {
     return (
       <div className="min-h-screen" style={{ backgroundColor: isEmbedMode ? 'transparent' : '#FBF3E7' }}>
         {!isEmbedMode && <PSIHeader />}
-        {!isEmbedMode && <SiteNavigation />}
         <div className="flex flex-col items-center justify-center h-[calc(100vh-100px)] gap-4 px-4">
           <div className="w-24 h-24 mb-4 bg-red-100 rounded-full flex items-center justify-center">
             <svg className="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,7 +217,6 @@ function EcosystemMapContent() {
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: isEmbedMode ? 'transparent' : '#FBF3E7' }}>
       {!isEmbedMode && <PSIHeader />}
-      {!isEmbedMode && <SiteNavigation />}
 
       {!isEmbedMode && (
         <>

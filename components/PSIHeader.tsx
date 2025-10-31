@@ -1,6 +1,19 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 export default function PSIHeader() {
+  const pathname = usePathname();
+
+  const navItems = [
+    { href: '/change-pathways', label: 'Theory of Change Explorer' },
+    { href: '/framework-explorer', label: 'Strategic Elements' },
+    { href: '/ecosystem-map', label: 'Ecosystem Map' },
+  ];
+
   return (
-    <header className="bg-white border-b border-gray-200">
+    <header className="border-b border-gray-200" style={{ backgroundColor: '#FBF3E7' }}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
           {/* PSI Logo */}
@@ -38,6 +51,33 @@ export default function PSIHeader() {
               <path fillRule="evenodd" clipRule="evenodd" d="M86.0002 44.8696H77.0418V47.4791C77.0418 68.7536 59.7954 86 38.5209 86C17.2464 86 4.67886e-06 68.7536 0 47.4791L0 41.1304H8.9584L8.9584 38.5209C8.95839 17.2464 26.2048 0 47.4793 0C68.7538 0 86.0002 17.2464 86.0002 38.5209L86.0002 44.8696ZM53.0289 74.2503C71.261 57.6143 71.2611 30.642 53.0289 14.006L42.5155 4.41301L32.0021 14.006C13.77 30.642 13.77 57.6143 32.0021 74.2503L42.5155 83.8433L53.0289 74.2503ZM65.3263 42.722L58.4593 40.2316C52.3668 38.022 47.5739 33.1165 45.4151 26.8807L42.9819 19.8522L40.5487 26.8807C38.3899 33.1165 33.597 38.022 27.5045 40.2316L20.6375 42.722L27.5045 45.2125C33.597 47.422 38.3899 52.3276 40.5487 58.5633L42.9819 65.5918L45.4151 58.5633C47.5739 52.3276 52.3668 47.422 58.4593 45.2125L65.3263 42.722Z" fill="black"/>
             </svg>
           </a>
+
+          {/* Navigation Items */}
+          <nav className="flex items-center gap-8">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="relative font-medium text-base transition-colors"
+                  style={{
+                    color: isActive ? '#E67E22' : '#2B1810',
+                  }}
+                >
+                  {item.label}
+                  {isActive && (
+                    <span className="absolute -bottom-1 left-1/2 transform -translate-x-1/2">
+                      <svg width="12" height="6" viewBox="0 0 12 6" fill="none">
+                        <path d="M6 6L0 0H12L6 6Z" fill="#E67E22"/>
+                      </svg>
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
 
           {/* Go Home Link */}
           <a
