@@ -103,7 +103,7 @@ export default function OrgDetailPanel({ orgId, organizations, projects, onClose
   return (
     <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-h-full flex flex-col animate-slideUp" style={{ boxShadow: '0 25px 50px -12px rgba(49, 126, 109, 0.25), 0 10px 25px -5px rgba(49, 126, 109, 0.1)' }}>
       {/* Branded Header */}
-      <div className="bg-gradient-to-r from-teal-700 to-teal-600 p-6">
+      <div className="bg-gradient-to-r from-teal-700 to-teal-600 p-6 rounded-t-2xl">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <h2 id="org-detail-title" className="text-sm font-semibold mb-2 uppercase tracking-wide" style={{ color: '#FBF3E7' }}>Organization Details</h2>
@@ -186,15 +186,6 @@ export default function OrgDetailPanel({ orgId, organizations, projects, onClose
                   </span>
                 ))}
               </div>
-            </div>
-          )}
-
-          {org.entityType && (
-            <div>
-              <label className="block text-sm font-bold mb-2 uppercase tracking-wide" style={{ color: '#2B180A' }}>
-                Entity Type
-              </label>
-              <p className="text-base font-normal" style={{ color: '#4A4643', lineHeight: '1.6' }}>{org.entityType}</p>
             </div>
           )}
 

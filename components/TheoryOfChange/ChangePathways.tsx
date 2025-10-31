@@ -1367,7 +1367,18 @@ export default function ChangePathways({
               <div ref={projectColumnRef} className="space-y-2 max-h-[800px] overflow-y-auto pr-4 custom-scrollbar">
                 {relevantProjects.length === 0 ? (
                   <div className="bg-white rounded-lg p-6 text-center border-2 border-dashed" style={{ borderColor: LIGHT_BACKGROUNDS.border }}>
-                    <p className="text-sm" style={{ color: LIGHT_TEXT.tertiary }}>No projects addressing selected problems</p>
+                    <p className="text-sm mb-4" style={{ color: LIGHT_TEXT.tertiary }}>No projects addressing selected problems</p>
+                    <a
+                      href="https://airtable.com/appQkt2yYzVKhRaXx/pagrBWRKJzsN9T5yh/form"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm font-medium rounded-lg transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Working on this? Add your project
+                    </a>
                   </div>
                 ) : (
                   relevantProjects.map(project => {
