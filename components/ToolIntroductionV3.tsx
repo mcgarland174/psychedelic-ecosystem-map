@@ -105,6 +105,27 @@ export default function ToolIntroductionV3({
             </div>
           </div>
         )}
+
+        {/* Scroll Indicator Arrow */}
+        <div className="flex flex-col items-center mt-12 animate-bounce">
+          <p className="text-sm font-medium mb-2" style={{ color: '#8B6F47' }}>
+            Explore the tool below
+          </p>
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            style={{ color: '#317E6D' }}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+        </div>
       </div>
     </div>
   );
