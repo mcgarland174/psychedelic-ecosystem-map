@@ -4,6 +4,12 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import FocusTrap from 'focus-trap-react';
 import PSIHeader from '@/components/PSIHeader';
+import ToolIntroductionV3 from '@/components/ToolIntroductionV3';
+import InfoModal from '@/components/InfoModal';
+import GettingStarted from '@/components/modals/ecosystem-map/GettingStarted';
+import ImportantInformation from '@/components/modals/ecosystem-map/ImportantInformation';
+import HelpUsMakeAccurate from '@/components/modals/ecosystem-map/HelpUsMakeAccurate';
+import FAQ from '@/components/modals/ecosystem-map/FAQ';
 import SimpleBubbleView from '@/components/SimpleBubbleView';
 import GeographicCompositionView from '@/components/GeographicCompositionView';
 import TableView from '@/components/TableView';
@@ -65,6 +71,12 @@ function EcosystemMapContent() {
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [showEmbedModal, setShowEmbedModal] = useState(false);
   const [copiedEmbed, setCopiedEmbed] = useState(false);
+
+  // Modal state
+  const [showGettingStartedModal, setShowGettingStartedModal] = useState(false);
+  const [showImportantInfoModal, setShowImportantInfoModal] = useState(false);
+  const [showHelpUsModal, setShowHelpUsModal] = useState(false);
+  const [showFAQModal, setShowFAQModal] = useState(false);
 
   // Airtable form URLs
   const SUBMIT_ORG_FORM_URL = 'https://airtable.com/appQkt2yYzVKhRaXx/pag7exiNQcO65VQvk/form';
@@ -223,34 +235,33 @@ function EcosystemMapContent() {
           {/* Decorative Top Bar */}
           <div className="h-1.5 bg-gradient-to-r from-teal-600 to-teal-500" />
 
-          {/* Hero Header */}
-          <header className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F7F0E8 0%, #FFFFFF 100%)' }}>
-            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6 pb-0">
-              <div className="text-center mb-4">
-                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 animate-slideUp" style={{ color: '#2B180A' }}>
-                  Psychedelic Ecosystem Map
-                  {locationFilter && (
-                    <span className="ml-3 inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-teal-100 text-teal-800 border-2 border-teal-300 animate-slideUp" style={{ animationDelay: '0.2s' }}>
-                      <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {locationFilter.charAt(0).toUpperCase() + locationFilter.slice(1).toLowerCase()}
-                    </span>
-                  )}
-                </h1>
-                <div className="text-xs md:text-sm max-w-xl mx-auto mb-4 animate-slideUp font-normal leading-relaxed" style={{ color: '#4A4643', animationDelay: '0.1s', lineHeight: '1.5' }}>
-                  Explore the interconnected network of <span className="inline-flex items-center gap-1"><span>organizations</span><TermTooltip term="ecosystem-role" iconSize={14} /></span>, projects, and programs
-                  shaping the future of psychedelics.
-                  {locationFilter && (
-                    <span className="block mt-2 text-teal-700 font-medium">
-                      Showing results for {locationFilter.charAt(0).toUpperCase() + locationFilter.slice(1).toLowerCase()}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </header>
+          {/* Introduction Section */}
+          <ToolIntroductionV3
+            title="Psychedelic Ecosystem Map"
+            subtitle="Discover Who's Working in the Psychedelic Ecosystem"
+            calloutText="764 organizations mapped and growing. This tool helps you find potential collaborators, understand where work is concentrated, and identify coordination opportunities across the field."
+            bodyText={`The psychedelic ecosystem includes hundreds of organizations and projects working across research, policy, clinical practice, harm reduction, education, and community support. This map shows who's doing what, where they're located, and how to connect with their work.
+
+All information comes from publicly available sources or direct submissions from organizations. Coverage is strongest in the United States; global representation is limited by publicly available information. This is not a comprehensive directory—it's a starting point that grows as organizations choose to participate. Inclusion does not constitute endorsement, quality assessment, or medical advice.
+
+Organizations can claim and edit their profiles at any time. All content is for educational purposes only.`}
+            links={[
+              {
+                text: "Submit Your Organization",
+                onClick: () => window.open(SUBMIT_ORG_FORM_URL, '_blank')
+              },
+              {
+                text: "Submit a Project",
+                onClick: () => window.open(SUBMIT_PROJECT_FORM_URL, '_blank')
+              }
+            ]}
+            modalLinks={[
+              { text: "Getting Started", onClick: () => setShowGettingStartedModal(true) },
+              { text: "Important Information", onClick: () => setShowImportantInfoModal(true) },
+              { text: "Help Us Make This Accurate", onClick: () => setShowHelpUsModal(true) },
+              { text: "FAQ", onClick: () => setShowFAQModal(true) }
+            ]}
+          />
         </>
       )}
 
@@ -717,6 +728,88 @@ function EcosystemMapContent() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* All Info Modals */}
+      <InfoModal
+        isOpen={showGettingStartedModal}
+        onClose={() => setShowGettingStartedModal(false)}
+        title="Getting Started"
+      >
+        <GettingStarted />
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showImportantInfoModal}
+        onClose={() => setShowImportantInfoModal(false)}
+        title="Important Information"
+      >
+        <ImportantInformation />
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showHelpUsModal}
+        onClose={() => setShowHelpUsModal(false)}
+        title="Help Us Make This Accurate"
+      >
+        <HelpUsMakeAccurate />
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showFAQModal}
+        onClose={() => setShowFAQModal(false)}
+        title="FAQ"
+      >
+        <FAQ />
+      </InfoModal>
+
+      {/* Enhanced Footer with All Links */}
+      {!isEmbedMode && (
+        <footer className="w-full border-t mt-20" style={{ backgroundColor: '#2B231E', borderColor: '#4A4643' }}>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+            <div className="flex flex-col gap-6">
+              {/* Main Footer Links */}
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="text-xs sm:text-sm text-center md:text-left" style={{ color: '#A19D9B' }}>
+                  © {new Date().getFullYear()} Psychedelic Safety Institute. All rights reserved.
+                </div>
+                <div className="flex flex-wrap gap-3 sm:gap-4 justify-center items-center text-xs sm:text-sm">
+                  <button onClick={() => setShowGettingStartedModal(true)} className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                    Getting Started
+                  </button>
+                  <button onClick={() => setShowImportantInfoModal(true)} className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                    Important Information
+                  </button>
+                  <button onClick={() => setShowFAQModal(true)} className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                    FAQ
+                  </button>
+                  <a href="https://www.psychedelicsafety.institute" target="_blank" rel="noopener noreferrer" className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                    About PSI
+                  </a>
+                  <a href="https://www.psychedelicsafety.institute/contact" target="_blank" rel="noopener noreferrer" className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                    Contact
+                  </a>
+                </div>
+              </div>
+
+              {/* Help Us Make This Accurate Button */}
+              <div className="text-center border-t pt-6" style={{ borderColor: '#4A4643' }}>
+                <button
+                  onClick={() => setShowHelpUsModal(true)}
+                  className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-semibold transition-all hover:scale-105"
+                  style={{ backgroundColor: '#317E6D', color: '#FFFFFF' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2A6B5E'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#317E6D'}
+                >
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Help Us Make This Accurate
+                </button>
+              </div>
+            </div>
+          </div>
+        </footer>
       )}
     </div>
   );

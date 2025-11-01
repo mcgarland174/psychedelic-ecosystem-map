@@ -2,26 +2,28 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
 export default function PSIHeader() {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { href: '/change-pathways', label: 'Theory of Change Explorer' },
+    { href: '/change-pathways', label: 'Theory of Change' },
     { href: '/framework-explorer', label: 'Strategic Elements' },
     { href: '/ecosystem-map', label: 'Ecosystem Map' },
   ];
 
   return (
     <header className="border-b border-gray-200" style={{ backgroundColor: '#FBF3E7' }}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex items-center justify-between">
           {/* PSI Logo */}
           <a
-            href="https://psychedelicsafety.institute/"
-            className="hover:opacity-80 transition-opacity"
+            href="https://www.psychedelicsafety.institute"
+            className="hover:opacity-80 transition-opacity flex-shrink-0"
           >
-            <svg width="230" height="58" viewBox="0 0 345 87" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-32 h-8 sm:w-48 sm:h-12 md:w-56 md:h-14" viewBox="0 0 345 87" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M333.734 24.4198H332.102C330.307 24.4198 328.729 24.2294 327.369 23.8485C326.009 23.4676 324.975 22.9598 324.24 22.3567C323.479 21.7854 322.88 21.0554 322.418 20.2302C321.955 19.4049 321.656 18.6114 321.52 17.9132C321.384 17.2149 321.33 16.4214 321.33 15.5962V15.0248C321.33 9.27993 324.893 6.3916 332.075 6.3916H333.762C335.611 6.3916 337.216 6.61378 338.604 6.99466C339.991 7.37554 341.052 7.85163 341.787 8.39121C342.494 8.93079 343.092 9.56559 343.528 10.3273C343.963 11.0891 344.262 11.7556 344.371 12.2952C344.48 12.8665 344.534 13.4378 344.534 14.0092V14.1044H336.972C336.917 13.8505 336.863 13.5965 336.754 13.3426C336.645 13.0887 336.482 12.803 336.237 12.4222C335.965 12.0413 335.557 11.7556 334.986 11.5017C334.414 11.2795 333.734 11.1526 332.918 11.1526H332.809C331.34 11.1526 330.334 11.5335 329.735 12.2952C329.137 13.057 328.838 13.9774 328.838 15.1201V15.2788C328.838 16.4849 329.137 17.5323 329.763 18.3575C330.361 19.1828 331.395 19.5954 332.809 19.5954H332.918C333.707 19.5954 334.387 19.5002 334.958 19.2462C335.53 18.9923 335.938 18.6749 336.21 18.294C336.482 17.9132 336.645 17.564 336.754 17.3101C336.863 17.0562 336.917 16.7705 336.972 16.5166H344.534V16.5801C344.534 16.9927 344.507 17.3736 344.452 17.7545C344.398 18.1353 344.289 18.6114 344.126 19.151C343.963 19.6906 343.718 20.1984 343.446 20.6428C343.147 21.1189 342.711 21.595 342.167 22.0711C341.623 22.5472 340.97 22.9598 340.236 23.2772C339.501 23.6263 338.577 23.912 337.461 24.1024C336.346 24.3246 335.094 24.4198 333.734 24.4198Z" fill="black"/>
               <path d="M319.192 0.32959V5.4397H311.793V0.32959H319.192ZM319.192 6.86799V23.944H311.793V6.86799H319.192Z" fill="black"/>
               <path d="M309.085 0.32959V23.944H301.685V0.32959H309.085Z" fill="black"/>
@@ -52,8 +54,8 @@ export default function PSIHeader() {
             </svg>
           </a>
 
-          {/* Navigation Items */}
-          <nav className="flex items-center gap-8">
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
 
@@ -61,7 +63,7 @@ export default function PSIHeader() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="relative font-medium text-base transition-colors"
+                  className="relative font-medium text-sm xl:text-base transition-colors whitespace-nowrap"
                   style={{
                     color: isActive ? '#E67E22' : '#2B1810',
                   }}
@@ -79,14 +81,60 @@ export default function PSIHeader() {
             })}
           </nav>
 
-          {/* Go Home Link */}
+          {/* Desktop Go Home Link */}
           <a
-            href="https://psychedelicsafety.institute/"
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
+            href="https://www.psychedelicsafety.institute"
+            className="hidden lg:block px-3 xl:px-4 py-2 text-xs xl:text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors whitespace-nowrap"
           >
             Go Home
           </a>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+            aria-label="Toggle menu"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {mobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden mt-4 pt-4 border-t border-gray-200">
+            <nav className="flex flex-col space-y-2">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-3 py-2 rounded-md font-medium text-base transition-colors"
+                    style={{
+                      backgroundColor: isActive ? '#E0F2EF' : 'transparent',
+                      color: isActive ? '#317E6D' : '#2B1810',
+                    }}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+              <a
+                href="https://www.psychedelicsafety.institute"
+                className="px-3 py-2 rounded-md font-medium text-base text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              >
+                Go Home
+              </a>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );

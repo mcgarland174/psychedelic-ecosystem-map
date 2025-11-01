@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import PSIHeader from '@/components/PSIHeader';
+import ToolIntroductionV3 from '@/components/ToolIntroductionV3';
+import InfoModal from '@/components/InfoModal';
 import FrameworkExplorer from '@/components/TheoryOfChange/FrameworkExplorer';
+import GettingStarted from '@/components/modals/strategic-elements/GettingStarted';
+import Methodology from '@/components/modals/strategic-elements/Methodology';
+import ImportantContext from '@/components/modals/strategic-elements/ImportantContext';
+import FAQAndFeedback from '@/components/modals/strategic-elements/FAQAndFeedback';
 import type { AppWorldview, AppOutcome, AppProblemCategory, AppProblem, AppProject } from '@/lib/data-transformer';
 
 interface ApiResponse {
@@ -17,6 +23,10 @@ export default function FrameworkExplorerPage() {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showGettingStartedModal, setShowGettingStartedModal] = useState(false);
+  const [showMethodologyModal, setShowMethodologyModal] = useState(false);
+  const [showImportantContextModal, setShowImportantContextModal] = useState(false);
+  const [showFAQModal, setShowFAQModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,9 +83,29 @@ export default function FrameworkExplorerPage() {
     );
   }
 
+  const introText = `Understanding the psychedelic ecosystem requires recognizing that different stakeholders hold different perspectives, priorities, and visions for the future. The Strategic Elements Explorer helps you navigate this complexity by making explicit the diverse worldviews, shared outcomes, and common challenges that shape our field.
+
+This framework emerged from asking stakeholders: What does success look like to you? What barriers stand in your way? What would you do with a magic wand? Their answers revealed both the diversity of perspectives and the areas of surprising alignment.`;
+
+  const calloutText = `7 worldviews, 48 problems, 38 outcomes—all field-validated. These aren't boxes—they're tools for finding allies and coordination opportunities. Built from systematic analysis of 172 stakeholders across 13 dimensions. Shape them with us.`;
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F0' }}>
       <PSIHeader />
+      <ToolIntroductionV3
+        title="Strategic Elements Explorer"
+        subtitle="Navigate the Diverse Perspectives and Shared Priorities Shaping the Field"
+        calloutText={calloutText}
+        calloutIcon="🗺️"
+        bodyText={introText}
+        links={[]}
+        modalLinks={[
+          { text: "Getting Started", onClick: () => setShowGettingStartedModal(true) },
+          { text: "Methodology", onClick: () => setShowMethodologyModal(true) },
+          { text: "Important Context", onClick: () => setShowImportantContextModal(true) },
+          { text: "FAQ & Feedback", onClick: () => setShowFAQModal(true) }
+        ]}
+      />
       <FrameworkExplorer
         worldviews={data.worldviews}
         outcomes={data.outcomes}
@@ -83,6 +113,87 @@ export default function FrameworkExplorerPage() {
         problemCategories={data.problemCategories}
         projects={data.projects}
       />
+
+      {/* Modals */}
+      <InfoModal
+        isOpen={showGettingStartedModal}
+        onClose={() => setShowGettingStartedModal(false)}
+        title="Getting Started"
+      >
+        <GettingStarted />
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showMethodologyModal}
+        onClose={() => setShowMethodologyModal(false)}
+        title="Methodology"
+      >
+        <Methodology />
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showImportantContextModal}
+        onClose={() => setShowImportantContextModal(false)}
+        title="Important Context"
+      >
+        <ImportantContext />
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showFAQModal}
+        onClose={() => setShowFAQModal(false)}
+        title="FAQ & Feedback"
+      >
+        <FAQAndFeedback />
+      </InfoModal>
+
+      {/* Enhanced Footer */}
+      <footer className="w-full border-t mt-20" style={{ backgroundColor: '#2B231E', borderColor: '#4A4643' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="text-xs sm:text-sm text-center md:text-left" style={{ color: '#A19D9B' }}>
+                © {new Date().getFullYear()} Psychedelic Safety Institute. All rights reserved.
+              </div>
+              <div className="flex flex-wrap gap-3 sm:gap-4 justify-center items-center text-xs sm:text-sm">
+                <button onClick={() => setShowGettingStartedModal(true)} className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                  Getting Started
+                </button>
+                <button onClick={() => setShowMethodologyModal(true)} className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                  Methodology
+                </button>
+                <button onClick={() => setShowImportantContextModal(true)} className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                  Important Context
+                </button>
+                <button onClick={() => setShowFAQModal(true)} className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                  FAQ & Feedback
+                </button>
+                <a href="https://www.psychedelicsafety.institute" target="_blank" rel="noopener noreferrer" className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                  About PSI
+                </a>
+                <a href="https://www.psychedelicsafety.institute/contact" target="_blank" rel="noopener noreferrer" className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                  Contact
+                </a>
+              </div>
+            </div>
+
+            <div className="text-center border-t pt-6" style={{ borderColor: '#4A4643' }}>
+              <button
+                onClick={() => setShowFAQModal(true)}
+                className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-semibold transition-all hover:scale-105"
+                style={{ backgroundColor: '#317E6D', color: '#FFFFFF' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2A6B5E'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#317E6D'}
+              >
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Share Your Feedback
+              </button>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -1,0 +1,174 @@
+/* V2 Visual Enhancements for Theory of Change Explorer */
+
+/* 0. Override main section background to gray for better contrast */
+section.min-h-screen {
+  background-color: #F5F5F0 !important;
+}
+
+/* 1. Start Your Journey Box - Overlap Effect with Negative Margin */
+.journey-callout {
+  margin-top: -50px !important;
+  margin-bottom: 32px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
+  border-left-width: 5px !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* 2. Enhanced Card Shadows and Contrast for Worldview/Outcome/Problem cards */
+/* These are the clickable cards with borders and rounded corners */
+button.card-hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.2s ease !important;
+  background: white !important;
+}
+
+button.card-hover:hover {
+  box-shadow: 0 6px 16px rgba(49, 126, 109, 0.2) !important;
+  transform: translateY(-2px) !important;
+  border-color: #317E6D !important;
+}
+
+/* 3. Selected State Enhancement */
+/* Target cards with shadow-lg (selected state) */
+button.card-hover.shadow-lg {
+  border-width: 3px !important;
+  box-shadow: 0 6px 16px rgba(74, 144, 226, 0.2) !important;
+  background: #F8FBFF !important;
+}
+
+/* 4. Better Typography Contrast */
+button.card-hover h3,
+button.card-hover h4 {
+  font-weight: 700 !important;
+  color: #2B180A !important;
+}
+
+button.card-hover p {
+  color: #4A4643 !important;
+  line-height: 1.7 !important;
+}
+
+/* 5. Connection Lines - Thicker and More Visible */
+svg.connections-svg path[stroke] {
+  stroke-width: 3 !important;
+  opacity: 0.7 !important;
+  transition: all 0.2s ease !important;
+}
+
+svg.connections-svg path[stroke]:hover {
+  stroke-width: 4 !important;
+  opacity: 1 !important;
+}
+
+/* 6. Info Icons - Better Contrast */
+.info-icon,
+[class*="info"] svg,
+[class*="icon"] {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.info-icon:hover,
+[class*="info"] svg:hover,
+[class*="icon"]:hover {
+  opacity: 1;
+}
+
+/* 7. Column Headers Enhancement */
+h2[class*="font-bold"] {
+  font-weight: 700 !important;
+  color: #2B180A !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* 8. Responsive Column Layout */
+@media (max-width: 1400px) {
+  /* On smaller screens, make columns scrollable */
+  .columns-container,
+  div[class*="flex"][class*="gap-6"] {
+    overflow-x: auto;
+    overflow-y: visible;
+  }
+
+  .column,
+  div[class*="flex-shrink-0"][class*="space-y-4"] {
+    min-width: 350px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .column,
+  div[class*="flex-shrink-0"][class*="space-y-4"] {
+    min-width: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Stack columns vertically on mobile */
+  .columns-container,
+  div[class*="flex"][class*="gap-6"] {
+    flex-direction: column !important;
+    overflow-x: visible;
+  }
+
+  .column,
+  div[class*="flex-shrink-0"][class*="space-y-4"] {
+    width: 100%;
+    min-width: 100%;
+  }
+}
+
+/* 9. Smooth Scrolling */
+.scrollable-column,
+div[class*="overflow-y-auto"] {
+  scroll-behavior: smooth;
+}
+
+/* 10. Better Focus States for Accessibility */
+button:focus-visible {
+  outline: 3px solid #317E6D !important;
+  outline-offset: 2px !important;
+}
+
+/* 11. Enhanced Badge Styling */
+span[class*="badge"],
+span[style*="border-radius"][style*="padding"] {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+/* 12. Loading State Enhancement */
+.loading-spinner {
+  box-shadow: 0 4px 12px rgba(49, 126, 109, 0.2);
+}
+
+/* 13. Modal Enhancement */
+[role="dialog"] {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 14. Divider Lines Enhancement */
+hr,
+[style*="border-t"],
+[style*="border-b"] {
+  opacity: 0.6;
+}
+
+/* 15. Your Path Display Enhancement */
+div.border-2.rounded-xl[class*="animate-slideIn"] {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  padding: 16px 20px !important;
+}
+
+/* 16. Tone down overly bright purple/violet worldview colors */
+button.card-hover[style*="rgb(168, 85, 247)"],
+button.card-hover[style*="rgb(147, 51, 234)"],
+button.card-hover[style*="rgb(139, 92, 246)"] {
+  border-left-color: #9b87c4 !important; /* Softer purple-gray */
+}
+
+/* Also reduce contrast on any purple box shadows */
+button.card-hover[style*="box-shadow"][style*="168, 85, 247"] {
+  box-shadow: 0 10px 25px -5px rgba(155, 135, 196, 0.2) !important;
+}
