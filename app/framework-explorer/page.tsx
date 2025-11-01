@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import PSIHeader from '@/components/PSIHeader';
 import ToolIntroductionV3 from '@/components/ToolIntroductionV3';
 import InfoModal from '@/components/InfoModal';
+import BetaWarningModal from '@/components/BetaWarningModal';
 import FrameworkExplorer from '@/components/TheoryOfChange/FrameworkExplorer';
 import GettingStarted from '@/components/modals/strategic-elements/GettingStarted';
 import Methodology from '@/components/modals/strategic-elements/Methodology';
@@ -113,6 +114,9 @@ This framework emerged from asking stakeholders: What does success look like to 
         problemCategories={data.problemCategories}
         projects={data.projects}
       />
+
+      {/* Beta Warning Modal */}
+      <BetaWarningModal />
 
       {/* Modals */}
       <InfoModal

@@ -6,6 +6,7 @@ import FocusTrap from 'focus-trap-react';
 import PSIHeader from '@/components/PSIHeader';
 import ToolIntroductionV3 from '@/components/ToolIntroductionV3';
 import InfoModal from '@/components/InfoModal';
+import BetaWarningModal from '@/components/BetaWarningModal';
 import GettingStarted from '@/components/modals/ecosystem-map/GettingStarted';
 import ImportantInformation from '@/components/modals/ecosystem-map/ImportantInformation';
 import HelpUsMakeAccurate from '@/components/modals/ecosystem-map/HelpUsMakeAccurate';
@@ -729,6 +730,9 @@ Organizations can claim and edit their profiles at any time. All content is for 
           </div>
         </div>
       )}
+
+      {/* Beta Warning Modal */}
+      <BetaWarningModal />
 
       {/* All Info Modals */}
       <InfoModal

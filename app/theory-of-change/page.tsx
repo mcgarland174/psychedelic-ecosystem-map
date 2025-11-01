@@ -8,6 +8,7 @@ import HowToUseAndMethodology from '@/components/modals/HowToUseAndMethodology';
 import HelpUsImprove from '@/components/modals/HelpUsImprove';
 import FAQ from '@/components/modals/FAQ';
 import ImportantContext from '@/components/modals/strategic-elements/ImportantContext';
+import BetaWarningModal from '@/components/BetaWarningModal';
 import ChangePathways from '@/components/TheoryOfChange/ChangePathways';
 import type { AppWorldview, AppOutcome, AppProblemCategory, AppProblem, AppProject } from '@/lib/data-transformer';
 import './enhancements.css';
@@ -113,6 +114,9 @@ The Theory of Change Explorer is a free, transparent tool that maps connections 
         problemCategories={data.problemCategories}
         projects={data.projects}
       />
+
+      {/* Beta Warning Modal */}
+      <BetaWarningModal />
 
       {/* Modals */}
       <InfoModal
