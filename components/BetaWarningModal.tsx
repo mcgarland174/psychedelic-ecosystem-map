@@ -63,35 +63,6 @@ export default function BetaWarningModal() {
           </ul>
         </div>
 
-        {/* Call to Action */}
-        <div className="p-6 rounded-xl" style={{ backgroundColor: '#E0F2EF', border: '2px solid #317E6D' }}>
-          <h4 className="text-lg font-bold mb-3" style={{ color: '#317E6D' }}>
-            How You Can Help
-          </h4>
-          <p className="leading-relaxed mb-4" style={{ color: '#4A4643' }}>
-            Explore the tool, review the framework, and share your perspective. Your feedback helps ensure this resource accurately reflects the field's diversity and complexity.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <a
-              href="https://airtable.com/appQkt2yYzVKhRaXx/pagbN8oPTu8zDFEhO/form"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg font-semibold transition-all hover:scale-105 text-center"
-              style={{ backgroundColor: '#317E6D', color: '#FFFFFF' }}
-            >
-              Submit Feedback
-              <span>→</span>
-            </a>
-            <button
-              onClick={handleClose}
-              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg font-semibold transition-all hover:scale-105 text-center"
-              style={{ backgroundColor: '#FFFFFF', color: '#317E6D', border: '2px solid #317E6D' }}
-            >
-              Explore the Tool
-            </button>
-          </div>
-        </div>
-
         {/* Footer Note */}
         <p className="text-sm text-center" style={{ color: '#8B6F47' }}>
           This message will only appear once. You can access feedback and methodology information anytime through the links at the bottom of each page.
