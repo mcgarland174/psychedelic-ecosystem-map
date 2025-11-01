@@ -107,7 +107,7 @@ export default function ToolIntroductionV3({
         )}
 
         {/* Scroll Indicator Arrow */}
-        <div className="flex flex-col items-center mt-12 animate-bounce">
+        <div className="flex flex-col items-center mt-6 animate-bounce">
           <p className="text-sm font-medium mb-2" style={{ color: '#8B6F47' }}>
             Explore the tool below
           </p>

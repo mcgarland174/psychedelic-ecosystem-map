@@ -8,6 +8,7 @@ import InfoModal from '@/components/InfoModal';
 import HowToUseAndMethodology from '@/components/modals/HowToUseAndMethodology';
 import HelpUsImprove from '@/components/modals/HelpUsImprove';
 import FAQ from '@/components/modals/FAQ';
+import ImportantContext from '@/components/modals/strategic-elements/ImportantContext';
 import StoryMode from '@/components/TheoryOfChange/StoryMode';
 import ChangePathways from '@/components/TheoryOfChange/ChangePathways';
 import FrameworkExplorer from '@/components/TheoryOfChange/FrameworkExplorer';
@@ -29,6 +30,7 @@ export default function TheoryOfChangePage() {
   const [showHowToMethodologyModal, setShowHowToMethodologyModal] = useState(false);
   const [showHelpUsImproveModal, setShowHelpUsImproveModal] = useState(false);
   const [showFAQModal, setShowFAQModal] = useState(false);
+  const [showImportantContextModal, setShowImportantContextModal] = useState(false);
 
   // Fetch data from unified API
   useEffect(() => {
@@ -96,6 +98,7 @@ Built from 159 stakeholder interviews and refined through feedback from 140 fiel
 The framework includes 7 distinct worldviews, 38 field-validated outcomes, 48 validated problems, and 8 problem categories—all derived from systematic analysis of stakeholder perspectives.`}
         modalLinks={[
           { text: "How to Use & Methodology", onClick: () => setShowHowToMethodologyModal(true) },
+          { text: "Important Context", onClick: () => setShowImportantContextModal(true) },
           { text: "Help Us Improve This", onClick: () => setShowHelpUsImproveModal(true) },
           { text: "FAQ", onClick: () => setShowFAQModal(true) }
         ]}
@@ -195,6 +198,14 @@ The framework includes 7 distinct worldviews, 38 field-validated outcomes, 48 va
         title="FAQ"
       >
         <FAQ />
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showImportantContextModal}
+        onClose={() => setShowImportantContextModal(false)}
+        title="Important Context"
+      >
+        <ImportantContext />
       </InfoModal>
 
       {/* Enhanced Footer with All Links */}
