@@ -107,13 +107,29 @@ The Theory of Change Explorer is a free, transparent tool that maps connections 
           { text: "FAQ", onClick: () => setShowFAQModal(true) }
         ]}
       />
-      <ChangePathways
-        worldviews={data.worldviews}
-        outcomes={data.outcomes}
-        problems={data.problems}
-        problemCategories={data.problemCategories}
-        projects={data.projects}
-      />
+
+      {/* Tool Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div
+          className="rounded-2xl shadow-xl overflow-hidden"
+          style={{
+            backgroundColor: '#FFFFFF',
+            border: '2px solid #E6C8A1',
+            boxShadow: '0 10px 25px -5px rgba(49, 126, 109, 0.15), 0 8px 10px -6px rgba(49, 126, 109, 0.1)'
+          }}
+        >
+          {/* Decorative Top Bar */}
+          <div className="h-1.5 bg-gradient-to-r from-teal-600 to-teal-500" />
+
+          <ChangePathways
+            worldviews={data.worldviews}
+            outcomes={data.outcomes}
+            problems={data.problems}
+            problemCategories={data.problemCategories}
+            projects={data.projects}
+          />
+        </div>
+      </div>
 
       {/* Beta Warning Modal */}
       <BetaWarningModal />
