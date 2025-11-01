@@ -7,6 +7,7 @@ import InfoModal from '@/components/InfoModal';
 import HowToUseAndMethodology from '@/components/modals/HowToUseAndMethodology';
 import HelpUsImprove from '@/components/modals/HelpUsImprove';
 import FAQ from '@/components/modals/FAQ';
+import ImportantContext from '@/components/modals/strategic-elements/ImportantContext';
 import ChangePathways from '@/components/TheoryOfChange/ChangePathways';
 import type { AppWorldview, AppOutcome, AppProblemCategory, AppProblem, AppProject } from '@/lib/data-transformer';
 import './enhancements.css';
@@ -26,6 +27,7 @@ export default function ChangePathwaysPage() {
   const [showHowToMethodologyModal, setShowHowToMethodologyModal] = useState(false);
   const [showHelpUsImproveModal, setShowHelpUsImproveModal] = useState(false);
   const [showFAQModal, setShowFAQModal] = useState(false);
+  const [showImportantContextModal, setShowImportantContextModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,6 +101,7 @@ The Theory of Change Explorer is a free, transparent tool that maps connections 
         links={[]}
         modalLinks={[
           { text: "How to Use & Methodology", onClick: () => setShowHowToMethodologyModal(true) },
+          { text: "Important Context", onClick: () => setShowImportantContextModal(true) },
           { text: "Help Us Improve This", onClick: () => setShowHelpUsImproveModal(true) },
           { text: "FAQ", onClick: () => setShowFAQModal(true) }
         ]}
@@ -134,6 +137,14 @@ The Theory of Change Explorer is a free, transparent tool that maps connections 
         title="FAQ"
       >
         <FAQ />
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showImportantContextModal}
+        onClose={() => setShowImportantContextModal(false)}
+        title="Important Context"
+      >
+        <ImportantContext />
       </InfoModal>
 
       {/* Enhanced Footer with All Links */}
