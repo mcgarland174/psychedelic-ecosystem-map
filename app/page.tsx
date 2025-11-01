@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.push('/change-pathways');
+    router.push('/theory-of-change');
   }, [router]);
 
   return (
