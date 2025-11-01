@@ -107,26 +107,13 @@ This framework emerged from asking stakeholders: What does success look like to 
           { text: "FAQ & Feedback", onClick: () => setShowFAQModal(true) }
         ]}
       />
-
-      {/* Tool Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div
-          className="shadow-lg overflow-hidden"
-          style={{
-            backgroundColor: '#FFFFFF',
-            borderTop: '4px solid #317E6D',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)'
-          }}
-        >
-          <FrameworkExplorer
-            worldviews={data.worldviews}
-            outcomes={data.outcomes}
-            problems={data.problems}
-            problemCategories={data.problemCategories}
-            projects={data.projects}
-          />
-        </div>
-      </div>
+      <FrameworkExplorer
+        worldviews={data.worldviews}
+        outcomes={data.outcomes}
+        problems={data.problems}
+        problemCategories={data.problemCategories}
+        projects={data.projects}
+      />
 
       {/* Beta Warning Modal */}
       <BetaWarningModal />
