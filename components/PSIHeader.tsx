@@ -9,7 +9,7 @@ export default function PSIHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { href: '/change-pathways', label: 'Theory of Change' },
+    { href: '/theory-of-change', label: 'Theory of Change' },
     { href: '/framework-explorer', label: 'Strategic Elements' },
     { href: '/ecosystem-map', label: 'Ecosystem Map' },
   ];
