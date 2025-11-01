@@ -92,7 +92,7 @@ The Theory of Change Explorer is a free, transparent tool that maps connections 
   const calloutText = `Built from 159 interviews, refined by 140 field leaders. This framework emerged from what stakeholders told us was needed over two years of field research. See something to improve? The tool is designed for your input—suggest edits, propose additions, and help us refine it.`;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F0' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
       <PSIHeader />
       <ToolIntroductionV3
         title="Theory of Change Explorer"
