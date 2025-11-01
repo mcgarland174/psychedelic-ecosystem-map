@@ -24,14 +24,9 @@ export default function HowToUseAndMethodology() {
               <h4 className="text-lg font-bold mb-2" style={{ color: '#317E6D' }}>
                 Choose a Worldview
               </h4>
-              <p className="leading-relaxed mb-3" style={{ color: '#4A4643' }}>
+              <p className="leading-relaxed" style={{ color: '#4A4643' }}>
                 Click on a worldview card to select it (you can select multiple). Each worldview represents a fundamentally different way of thinking about psychedelics in society—these shape what outcomes matter and what problems need solving.
               </p>
-              <div className="p-3 rounded-lg" style={{ backgroundColor: '#F7F0E8' }}>
-                <p className="text-sm font-medium" style={{ color: '#8B6F47' }}>
-                  💡 <strong>Tip:</strong> Try selecting multiple worldviews to see where they overlap—that's often where collaboration is easiest.
-                </p>
-              </div>
             </div>
           </div>
 
@@ -46,14 +41,9 @@ export default function HowToUseAndMethodology() {
               <h4 className="text-lg font-bold mb-2" style={{ color: '#317E6D' }}>
                 See What Outcomes Matter
               </h4>
-              <p className="leading-relaxed mb-3" style={{ color: '#4A4643' }}>
+              <p className="leading-relaxed" style={{ color: '#4A4643' }}>
                 After selecting a worldview, the second column shows outcomes that are strongly relevant to that perspective. These are the measurable 5-year goals the field is working toward.
               </p>
-              <div className="p-3 rounded-lg" style={{ backgroundColor: '#F7F0E8' }}>
-                <p className="text-sm font-medium" style={{ color: '#8B6F47' }}>
-                  💡 <strong>For Funders:</strong> This helps you see what different stakeholder groups care about most.
-                </p>
-              </div>
             </div>
           </div>
 
@@ -68,14 +58,9 @@ export default function HowToUseAndMethodology() {
               <h4 className="text-lg font-bold mb-2" style={{ color: '#317E6D' }}>
                 Identify the Problems
               </h4>
-              <p className="leading-relaxed mb-3" style={{ color: '#4A4643' }}>
+              <p className="leading-relaxed" style={{ color: '#4A4643' }}>
                 Each outcome links to the problems blocking it. Click on an outcome to see what barriers stand in the way. These problems were identified by field stakeholders as the most pressing coordination challenges.
               </p>
-              <div className="p-3 rounded-lg" style={{ backgroundColor: '#F7F0E8' }}>
-                <p className="text-sm font-medium" style={{ color: '#8B6F47' }}>
-                  💡 <strong>For Practitioners:</strong> Find the problems your expertise can solve.
-                </p>
-              </div>
             </div>
           </div>
 
@@ -90,14 +75,9 @@ export default function HowToUseAndMethodology() {
               <h4 className="text-lg font-bold mb-2" style={{ color: '#317E6D' }}>
                 Discover Related Projects
               </h4>
-              <p className="leading-relaxed mb-3" style={{ color: '#4A4643' }}>
+              <p className="leading-relaxed" style={{ color: '#4A4643' }}>
                 See which projects are addressing each problem. This helps you find collaborators, avoid duplication, and identify gaps where new work is needed.
               </p>
-              <div className="p-3 rounded-lg" style={{ backgroundColor: '#F7F0E8' }}>
-                <p className="text-sm font-medium" style={{ color: '#8B6F47' }}>
-                  💡 <strong>For Organizers:</strong> Map the ecosystem's capacity around specific challenges.
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -117,7 +97,7 @@ export default function HowToUseAndMethodology() {
             <ul className="space-y-2 pl-4" style={{ color: '#4A4643' }}>
               <li className="flex items-start gap-2">
                 <span style={{ color: '#317E6D' }}>•</span>
-                <span><strong>159 stakeholder interviews</strong> across the psychedelic ecosystem (2022-2024)</span>
+                <span><strong>159 stakeholder interviews</strong> across the psychedelic ecosystem (2024-2025)</span>
               </li>
               <li className="flex items-start gap-2">
                 <span style={{ color: '#317E6D' }}>•</span>
@@ -183,6 +163,51 @@ export default function HowToUseAndMethodology() {
                 <span><strong>Resource distribution is uneven.</strong> Some worldviews have more associated outcomes than others, which may reflect current field emphasis or reveal gaps to address.</span>
               </li>
             </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Additional Important Context Section */}
+      <section className="pt-8 border-t" style={{ borderColor: '#E0F2EF' }}>
+        <h3 className="text-2xl font-bold mb-6" style={{ color: '#2B180A' }}>
+          Additional Important Context
+        </h3>
+
+        <div className="space-y-6">
+          <div className="p-6 rounded-xl border-l-4" style={{ backgroundColor: '#E0F2EF', borderColor: '#317E6D' }}>
+            <h4 className="text-lg font-bold mb-3" style={{ color: '#317E6D' }}>
+              Stakeholder-Validated
+            </h4>
+            <p className="leading-relaxed" style={{ color: '#4A4643' }}>
+              Content went through multiple validation stages: pre-summit circulation, summit workshops, participant portal review (since June 2024), and ongoing expert QA.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-xl border-l-4" style={{ backgroundColor: '#F7F0E8', borderColor: '#8B6F47' }}>
+            <h4 className="text-lg font-bold mb-3" style={{ color: '#8B6F47' }}>
+              Non-Exclusive Categories
+            </h4>
+            <p className="leading-relaxed" style={{ color: '#4A4643' }}>
+              You likely align with multiple worldviews, and that's expected. This framework helps you see where your alignments are and who shares them.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-xl border-l-4" style={{ backgroundColor: '#FFF4E6', borderColor: '#C89860' }}>
+            <h4 className="text-lg font-bold mb-3" style={{ color: '#8B6F47' }}>
+              Worldview Complexity
+            </h4>
+            <p className="leading-relaxed" style={{ color: '#4A4643' }}>
+              The seven categories necessarily simplify rich complexity. Indigenous peoples, for example, represent diverse traditions and do not share a single worldview. These categories help identify patterns across the field, not define individuals.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-xl border-l-4" style={{ backgroundColor: '#E0F2EF', borderColor: '#317E6D' }}>
+            <h4 className="text-lg font-bold mb-3" style={{ color: '#317E6D' }}>
+              Living Framework
+            </h4>
+            <p className="leading-relaxed" style={{ color: '#4A4643' }}>
+              As the field evolves, so should this map. Tell us what's missing, misrepresented, or needs updating.
+            </p>
           </div>
         </div>
       </section>
