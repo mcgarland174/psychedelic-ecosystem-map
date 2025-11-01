@@ -416,6 +416,7 @@ export default function ChangePathways({
         }
         .custom-scrollbar::-webkit-scrollbar {
           width: 10px;
+          height: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: ${LIGHT_BACKGROUNDS.tertiary};
@@ -617,7 +618,7 @@ export default function ChangePathways({
 
         {/* Swimlanes Grid */}
         <div
-          className="grid gap-8 relative overflow-x-auto pb-4"
+          className="grid gap-8 relative overflow-x-auto pb-4 custom-scrollbar"
           style={{ gridTemplateColumns: gridCols }}
         >
           {/* SVG Connection Lines */}
