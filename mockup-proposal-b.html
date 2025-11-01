@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposal B: Overlap/Integration Design</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f9f9f9;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .title h1 {
+      font-size: 32px;
+      color: #2B180A;
+      margin-bottom: 12px;
+    }
+    .title p {
+      color: #4A4643;
+      font-size: 18px;
+    }
+    .mockup-frame {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+    .header {
+      background: white;
+      padding: 20px 40px;
+      border-bottom: 2px solid #E5D5C3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-weight: bold;
+      color: #2B180A;
+      font-size: 18px;
+    }
+    .nav {
+      display: flex;
+      gap: 24px;
+    }
+    .nav a {
+      color: #4A4643;
+      text-decoration: none;
+    }
+    .nav a.active {
+      color: #D97706;
+      font-weight: 600;
+    }
+
+    /* PROPOSAL B SPECIFIC STYLES */
+    .intro-section {
+      background: #FBF3E7;
+      padding: 60px 80px 100px 80px;
+      border-radius: 0 0 40px 40px;
+      position: relative;
+      z-index: 1;
+    }
+    .intro-section h1 {
+      font-size: 36px;
+      font-weight: bold;
+      color: #2B180A;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .intro-section h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #317E6D;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .intro-section p {
+      color: #4A4643;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tool-section {
+      background: #F5F5F0;
+      padding: 0 40px 60px 40px;
+      position: relative;
+    }
+
+    .journey-box {
+      background: white;
+      margin: -60px auto 40px auto;
+      max-width: 1000px;
+      padding: 28px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      border-left: 5px solid #317E6D;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .journey-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #E0F2EF 0%, #C5E7E0 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+    .journey-text h3 {
+      font-weight: bold;
+      color: #2B180A;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+    .journey-text p {
+      color: #4A4643;
+      font-size: 15px;
+    }
+
+    .worldviews-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .worldviews-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .worldviews-header h3 {
+      font-weight: bold;
+      color: #2B180A;
+      font-size: 18px;
+    }
+    .badge {
+      background: #317E6D;
+      color: white;
+      border-radius: 14px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .worldview-card {
+      background: white;
+      border: 2px solid #E5D5C3;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .worldview-card:hover {
+      border-color: #317E6D;
+      box-shadow: 0 2px 8px rgba(49, 126, 109, 0.15);
+      transform: translateY(-1px);
+    }
+    .worldview-card.selected {
+      border-color: #4A90E2;
+      background: #F8FBFF;
+      border-width: 3px;
+    }
+    .worldview-info h4 {
+      font-weight: bold;
+      color: #2B180A;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+    .worldview-info p {
+      color: #4A4643;
+      font-size: 14px;
+    }
+    .info-icon {
+      width: 36px;
+      height: 36px;
+      background: #E5D5C3;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .notes {
+      margin-top: 40px;
+      padding: 24px;
+      background: #E0F2EF;
+      border-radius: 12px;
+      border-left: 5px solid #317E6D;
+    }
+    .notes h3 {
+      font-weight: bold;
+      color: #2B180A;
+      margin-bottom: 12px;
+    }
+    .notes ul {
+      margin-left: 24px;
+      color: #4A4643;
+      line-height: 2;
+    }
+    .notes strong {
+      color: #317E6D;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">
+      <h1>🅱️ Proposal B: Overlap/Integration Design</h1>
+      <p>Rounded intro section with overlapping "Start Your Journey" box</p>
+    </div>
+
+    <div class="mockup-frame">
+      <!-- Header -->
+      <div class="header">
+        <div class="logo">Psychedelic Safety Institute</div>
+        <div class="nav">
+          <a href="#" class="active">Theory of Change Explorer</a>
+          <a href="#">Strategic Elements</a>
+          <a href="#">Ecosystem Map</a>
+        </div>
+      </div>
+
+      <!-- Intro Section with Rounded Bottom -->
+      <div class="intro-section">
+        <h1>Theory of Change Explorer</h1>
+        <h2>Supporting the Health of the Psychedelic Field and Users</h2>
+        <p>
+          Over two years, we engaged with stakeholders across the psychedelic ecosystem through 138 in-depth
+          interviews, a national summit, and extensive field research to understand the challenges facing public
+          health and safety. Through this collaborative process, we identified core strategic and coordination
+          challenges that no single organization can solve alone.
+        </p>
+        <p>
+          This tool maps connections between different worldviews, outcomes, problems, and projects to help you
+          understand how your work fits into the broader ecosystem and discover potential collaboration opportunities.
+          This is a first iteration built from what the field told us was needed. All organizational and project
+          information comes from publicly available sources or direct submissions. Organizations can claim and edit
+          their profiles at any time.
+        </p>
+      </div>
+
+      <!-- Tool Section -->
+      <div class="tool-section">
+        <!-- Overlapping Journey Box -->
+        <div class="journey-box">
+          <div class="journey-icon">👁️</div>
+          <div class="journey-text">
+            <h3>Start Your Journey</h3>
+            <p>Select a worldview below to explore relevant outcomes, problems, and projects</p>
+          </div>
+        </div>
+
+        <!-- Worldviews -->
+        <div class="worldviews-container">
+          <div class="worldviews-header">
+            <span style="font-size: 22px;">👁️</span>
+            <h3>WORLDVIEWS</h3>
+            <span class="badge">7</span>
+          </div>
+
+          <div class="worldview-card selected">
+            <div class="worldview-info">
+              <h4>Medical Integration Orientation</h4>
+              <p>Make psychedelics prescription medicines</p>
+            </div>
+            <div class="info-icon" style="background: #A8D5E2;">ℹ️</div>
+          </div>
+
+          <div class="worldview-card">
+            <div class="worldview-info">
+              <h4>Pragmatic Policy Reform Orientation</h4>
+              <p>Build coalitions for policy reform</p>
+            </div>
+            <div class="info-icon">ℹ️</div>
+          </div>
+
+          <div class="worldview-card">
+            <div class="worldview-info">
+              <h4>Abolitionist Justice Orientation</h4>
+              <p>Challenge extraction and oppression through grassroots transformation</p>
+            </div>
+            <div class="info-icon">ℹ️</div>
+          </div>
+
+          <div class="worldview-card">
+            <div class="worldview-info">
+              <h4>Traditional/Indigenous Orientation</h4>
+              <p>Uphold indigenous sovereignty in psychedelic practice</p>
+            </div>
+            <div class="info-icon">ℹ️</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <h3>✨ Key Features of Proposal B:</h3>
+      <ul>
+        <li>Beige intro section has <strong>rounded bottom corners</strong> (40px radius)</li>
+        <li>"Start Your Journey" box <strong>overlaps</strong> the intro section by 60px</li>
+        <li>Creates natural <strong>visual flow</strong> downward</li>
+        <li>Overlap creates <strong>depth and layering</strong> effect</li>
+        <li>Box shadow on journey card emphasizes the elevation</li>
+        <li>Smooth, organic transition into tool section</li>
+        <li><strong>More traditional/conservative</strong> approach</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

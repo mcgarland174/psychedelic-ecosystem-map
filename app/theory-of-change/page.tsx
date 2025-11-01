@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { AppWorldview, AppOutcome, AppProblemCategory, AppProblem, AppProject } from '@/lib/data-transformer';
 import PSIHeader from '@/components/PSIHeader';
 import ToolIntroductionV3 from '@/components/ToolIntroductionV3';
 import InfoModal from '@/components/InfoModal';
@@ -9,9 +8,9 @@ import HowToUseAndMethodology from '@/components/modals/HowToUseAndMethodology';
 import HelpUsImprove from '@/components/modals/HelpUsImprove';
 import FAQ from '@/components/modals/FAQ';
 import ImportantContext from '@/components/modals/strategic-elements/ImportantContext';
-import StoryMode from '@/components/TheoryOfChange/StoryMode';
 import ChangePathways from '@/components/TheoryOfChange/ChangePathways';
-import FrameworkExplorer from '@/components/TheoryOfChange/FrameworkExplorer';
+import type { AppWorldview, AppOutcome, AppProblemCategory, AppProblem, AppProject } from '@/lib/data-transformer';
+import './enhancements.css';
 
 interface ApiResponse {
   worldviews: AppWorldview[];
@@ -21,18 +20,15 @@ interface ApiResponse {
   projects: AppProject[];
 }
 
-export default function TheoryOfChangePage() {
+export default function ChangePathwaysPage() {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'story' | 'swimlanes' | 'explorer'>('story');
-
-  // Modal state
+  const [error, setError] = useState<string | null>(null);
   const [showHowToMethodologyModal, setShowHowToMethodologyModal] = useState(false);
   const [showHelpUsImproveModal, setShowHelpUsImproveModal] = useState(false);
   const [showFAQModal, setShowFAQModal] = useState(false);
   const [showImportantContextModal, setShowImportantContextModal] = useState(false);
 
-  // Fetch data from unified API
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,6 +38,7 @@ export default function TheoryOfChangePage() {
         setData(json);
       } catch (error) {
         console.error('Error fetching ToC data:', error);
+        setError('Unable to load Theory of Change Explorer data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -52,50 +49,56 @@ export default function TheoryOfChangePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: '#F5F5F0' }}>
+      <div className="min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
         <PSIHeader />
         <div className="flex items-center justify-center h-[calc(100vh-100px)]">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500 mb-4"></div>
-            <p className="text-lg" style={{ color: '#4A4643' }}>Loading Theory of Change...</p>
+            <p className="text-base font-medium" style={{ color: '#4A4643' }}>Loading Theory of Change Explorer...</p>
           </div>
         </div>
       </div>
     );
   }
 
-  if (!data) {
+  if (error || !data) {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: '#F5F5F0' }}>
+      <div className="min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
         <PSIHeader />
-        <div className="flex items-center justify-center h-[calc(100vh-100px)]">
-          <div className="text-center">
-            <p className="text-red-600 text-lg">Failed to load data. Please refresh the page.</p>
+        <div className="flex flex-col items-center justify-center h-[calc(100vh-100px)] gap-4 px-4">
+          <div className="w-24 h-24 mb-4 bg-red-100 rounded-full flex items-center justify-center">
+            <svg className="w-12 h-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
           </div>
+          <h2 className="text-3xl font-bold" style={{ color: '#2B180A' }}>Something went wrong</h2>
+          <p className="text-base max-w-md text-center" style={{ color: '#4A4643' }}>{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all hover:scale-105"
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
   }
+
+  const introText = `Over two years, we engaged with stakeholders across the psychedelic ecosystem through 159 in-depth interviews, a national summit, and extensive field research to understand the challenges facing public health and safety. Through this collaborative process, we identified core strategic and coordination challenges that no single organization can solve alone.
+
+The Theory of Change Explorer is a free, transparent tool that maps connections between different worldviews, outcomes, problems, and projects to help you understand how your work fits into the broader ecosystem and discover potential collaboration opportunities.`;
 
   const calloutText = `Built from 159 interviews, refined by 140 field leaders. This framework emerged from what stakeholders told us was needed over two years of field research. See something to improve? The tool is designed for your input—suggest edits, propose additions, and help us refine it.`;
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#F5F5F0' }}>
       <PSIHeader />
-
-      {/* Decorative Top Bar */}
-      <div className="h-1.5 bg-gradient-to-r from-teal-600 to-teal-500" />
-
-      {/* Introduction Section */}
       <ToolIntroductionV3
         title="Theory of Change Explorer"
-        subtitle="Mapping How Different Worldviews Lead to Different Outcomes"
+        subtitle="Supporting the Health of the Psychedelic Field and Users"
         calloutText={calloutText}
-        bodyText={`This tool connects what stakeholders believe should change in the psychedelic ecosystem (worldviews), what they want to achieve (outcomes), what problems stand in the way, and what projects address those problems. It's not a prescriptive roadmap—it's a descriptive map of how different actors see the path forward.
-
-Built from 159 stakeholder interviews and refined through feedback from 140 field leaders at a coordination summit, this framework reveals the diversity of approaches shaping the field. Use it to find alignment, understand disagreements, and identify where your work fits in the broader ecosystem.
-
-The framework includes 7 distinct worldviews, 38 field-validated outcomes, 48 validated problems, and 8 problem categories—all derived from systematic analysis of stakeholder perspectives.`}
+        bodyText={introText}
+        links={[]}
         modalLinks={[
           { text: "How to Use & Methodology", onClick: () => setShowHowToMethodologyModal(true) },
           { text: "Important Context", onClick: () => setShowImportantContextModal(true) },
@@ -103,79 +106,15 @@ The framework includes 7 distinct worldviews, 38 field-validated outcomes, 48 va
           { text: "FAQ", onClick: () => setShowFAQModal(true) }
         ]}
       />
+      <ChangePathways
+        worldviews={data.worldviews}
+        outcomes={data.outcomes}
+        problems={data.problems}
+        problemCategories={data.problemCategories}
+        projects={data.projects}
+      />
 
-      {/* Tab Navigation */}
-      <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-          <button
-            onClick={() => setActiveTab('story')}
-            className={`px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all transform hover:scale-102 ${
-              activeTab === 'story'
-                ? 'text-white shadow-lg'
-                : 'bg-white hover:bg-gray-50 border border-gray-200'
-            }`}
-            style={activeTab === 'story' ? { backgroundColor: '#317E6D' } : { color: '#4A4643' }}
-          >
-            Story Mode
-          </button>
-          <button
-            onClick={() => setActiveTab('swimlanes')}
-            className={`px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all transform hover:scale-102 ${
-              activeTab === 'swimlanes'
-                ? 'text-white shadow-lg'
-                : 'bg-white hover:bg-gray-50 border border-gray-200'
-            }`}
-            style={activeTab === 'swimlanes' ? { backgroundColor: '#317E6D' } : { color: '#736C66' }}
-            title="An interactive view that lets you trace connections from worldviews → outcomes → problems → projects to see how different perspectives lead to different solutions."
-          >
-            Change Pathways
-          </button>
-          <button
-            onClick={() => setActiveTab('explorer')}
-            className={`px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl font-bold text-sm sm:text-base transition-all transform hover:scale-102 ${
-              activeTab === 'explorer'
-                ? 'text-white shadow-lg'
-                : 'bg-white hover:bg-gray-50 border border-gray-200'
-            }`}
-            style={activeTab === 'explorer' ? { backgroundColor: '#CC8D37' } : { color: '#736C66' }}
-          >
-            Framework Explorer
-          </button>
-        </div>
-      </div>
-
-      {/* Content Sections */}
-      {activeTab === 'story' && (
-        <StoryMode
-          worldviews={data.worldviews}
-          outcomes={data.outcomes}
-          problems={data.problems}
-          problemCategories={data.problemCategories}
-          projects={data.projects}
-        />
-      )}
-
-      {activeTab === 'swimlanes' && (
-        <ChangePathways
-          worldviews={data.worldviews}
-          outcomes={data.outcomes}
-          problems={data.problems}
-          problemCategories={data.problemCategories}
-          projects={data.projects}
-        />
-      )}
-
-      {activeTab === 'explorer' && (
-        <FrameworkExplorer
-          worldviews={data.worldviews}
-          outcomes={data.outcomes}
-          problems={data.problems}
-          problemCategories={data.problemCategories}
-          projects={data.projects}
-        />
-      )}
-
-      {/* All Info Modals */}
+      {/* Modals */}
       <InfoModal
         isOpen={showHowToMethodologyModal}
         onClose={() => setShowHowToMethodologyModal(false)}
@@ -187,7 +126,7 @@ The framework includes 7 distinct worldviews, 38 field-validated outcomes, 48 va
       <InfoModal
         isOpen={showHelpUsImproveModal}
         onClose={() => setShowHelpUsImproveModal(false)}
-        title="Help Us Improve This Tool"
+        title="Help Us Improve This"
       >
         <HelpUsImprove />
       </InfoModal>

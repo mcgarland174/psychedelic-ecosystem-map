@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import PSIHeader from '@/components/PSIHeader';
 import ToolIntroductionV3 from '@/components/ToolIntroductionV3';
 import InfoModal from '@/components/InfoModal';
-import HowToUseAndMethodology from '@/components/modals/HowToUseAndMethodology';
+import TheoryOfChangeMethodologyMerged from '@/components/modals/TheoryOfChangeMethodologyMerged';
+import TheoryOfChangeHowToV3 from '@/components/modals/TheoryOfChangeHowToV3';
+import ImportantContext from '@/components/modals/ImportantContext';
 import HelpUsImprove from '@/components/modals/HelpUsImprove';
 import FAQ from '@/components/modals/FAQ';
-import ImportantContext from '@/components/modals/strategic-elements/ImportantContext';
 import ChangePathways from '@/components/TheoryOfChange/ChangePathways';
 import type { AppWorldview, AppOutcome, AppProblemCategory, AppProblem, AppProject } from '@/lib/data-transformer';
 import './enhancements.css';
@@ -24,10 +25,11 @@ export default function ChangePathwaysPage() {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [showHowToMethodologyModal, setShowHowToMethodologyModal] = useState(false);
+  const [showHowToModal, setShowHowToModal] = useState(false);
+  const [showMethodologyModal, setShowMethodologyModal] = useState(false);
+  const [showImportantContextModal, setShowImportantContextModal] = useState(false);
   const [showHelpUsImproveModal, setShowHelpUsImproveModal] = useState(false);
   const [showFAQModal, setShowFAQModal] = useState(false);
-  const [showImportantContextModal, setShowImportantContextModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,17 +97,20 @@ The Theory of Change Explorer is a free, transparent tool that maps connections 
       <PSIHeader />
       <ToolIntroductionV3
         title="Theory of Change Explorer"
-        subtitle="Supporting the Health of the Psychedelic Field and Users"
+        subtitle="Supporting the Health of the Psychedelic Field and Users (V3 - Updated Content)"
         calloutText={calloutText}
+        calloutIcon="📊"
         bodyText={introText}
         links={[]}
         modalLinks={[
-          { text: "How to Use & Methodology", onClick: () => setShowHowToMethodologyModal(true) },
+          { text: "How to Use This Tool", onClick: () => setShowHowToModal(true) },
+          { text: "How This Framework Was Developed", onClick: () => setShowMethodologyModal(true) },
           { text: "Important Context", onClick: () => setShowImportantContextModal(true) },
           { text: "Help Us Improve This", onClick: () => setShowHelpUsImproveModal(true) },
-          { text: "FAQ", onClick: () => setShowFAQModal(true) }
+          { text: "Frequently Asked Questions", onClick: () => setShowFAQModal(true) }
         ]}
       />
+
       <ChangePathways
         worldviews={data.worldviews}
         outcomes={data.outcomes}
@@ -116,11 +121,27 @@ The Theory of Change Explorer is a free, transparent tool that maps connections 
 
       {/* Modals */}
       <InfoModal
-        isOpen={showHowToMethodologyModal}
-        onClose={() => setShowHowToMethodologyModal(false)}
-        title="How to Use & Methodology"
+        isOpen={showHowToModal}
+        onClose={() => setShowHowToModal(false)}
+        title="How to Use This Tool"
       >
-        <HowToUseAndMethodology />
+        <TheoryOfChangeHowToV3 />
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showMethodologyModal}
+        onClose={() => setShowMethodologyModal(false)}
+        title="How This Framework Was Developed"
+      >
+        <TheoryOfChangeMethodologyMerged />
+      </InfoModal>
+
+      <InfoModal
+        isOpen={showImportantContextModal}
+        onClose={() => setShowImportantContextModal(false)}
+        title="Important Context"
+      >
+        <ImportantContext />
       </InfoModal>
 
       <InfoModal
@@ -134,39 +155,37 @@ The Theory of Change Explorer is a free, transparent tool that maps connections 
       <InfoModal
         isOpen={showFAQModal}
         onClose={() => setShowFAQModal(false)}
-        title="FAQ"
+        title="Frequently Asked Questions"
       >
         <FAQ />
       </InfoModal>
 
-      <InfoModal
-        isOpen={showImportantContextModal}
-        onClose={() => setShowImportantContextModal(false)}
-        title="Important Context"
-      >
-        <ImportantContext />
-      </InfoModal>
-
       {/* Enhanced Footer with All Links */}
       <footer className="w-full border-t mt-20" style={{ backgroundColor: '#2B231E', borderColor: '#4A4643' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex flex-col gap-6">
             {/* Main Footer Links */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <div className="text-xs sm:text-sm text-center md:text-left" style={{ color: '#A19D9B' }}>
+              <div className="text-sm" style={{ color: '#A19D9B' }}>
                 © {new Date().getFullYear()} Psychedelic Safety Institute. All rights reserved.
               </div>
-              <div className="flex flex-wrap gap-3 sm:gap-4 justify-center items-center text-xs sm:text-sm">
-                <button onClick={() => setShowHowToMethodologyModal(true)} className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
-                  How to Use & Methodology
+              <div className="flex flex-wrap gap-4 justify-center items-center text-sm">
+                <button onClick={() => setShowHowToModal(true)} className="hover:underline transition-colors" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                  How to Use
                 </button>
-                <button onClick={() => setShowFAQModal(true)} className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                <button onClick={() => setShowMethodologyModal(true)} className="hover:underline transition-colors" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                  Methodology
+                </button>
+                <button onClick={() => setShowImportantContextModal(true)} className="hover:underline transition-colors" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                  Important Context
+                </button>
+                <button onClick={() => setShowFAQModal(true)} className="hover:underline transition-colors" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
                   FAQ
                 </button>
-                <a href="https://www.psychedelicsafety.institute" target="_blank" rel="noopener noreferrer" className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                <a href="https://psychedelicsafetyinstitute.org" target="_blank" rel="noopener noreferrer" className="hover:underline transition-colors" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
                   About PSI
                 </a>
-                <a href="https://www.psychedelicsafety.institute/contact" target="_blank" rel="noopener noreferrer" className="hover:underline transition-colors whitespace-nowrap" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
+                <a href="https://psychedelicsafetyinstitute.org/contact" target="_blank" rel="noopener noreferrer" className="hover:underline transition-colors" style={{ color: '#A19D9B' }} onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'} onMouseLeave={(e) => e.currentTarget.style.color = '#A19D9B'}>
                   Contact
                 </a>
               </div>
@@ -176,12 +195,12 @@ The Theory of Change Explorer is a free, transparent tool that maps connections 
             <div className="text-center border-t pt-6" style={{ borderColor: '#4A4643' }}>
               <button
                 onClick={() => setShowHelpUsImproveModal(true)}
-                className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-sm sm:text-base font-semibold transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all hover:scale-105"
                 style={{ backgroundColor: '#317E6D', color: '#FFFFFF' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2A6B5E'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#317E6D'}
               >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
                 Improve This Tool

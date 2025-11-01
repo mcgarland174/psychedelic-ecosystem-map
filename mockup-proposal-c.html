@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposal C: Full-Width + Wave Divider</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f9f9f9;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .title h1 {
+      font-size: 32px;
+      color: #2B180A;
+      margin-bottom: 12px;
+    }
+    .title p {
+      color: #4A4643;
+      font-size: 18px;
+    }
+    .mockup-frame {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+    .header {
+      background: white;
+      padding: 20px 40px;
+      border-bottom: 2px solid #E5D5C3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-weight: bold;
+      color: #2B180A;
+      font-size: 18px;
+    }
+    .nav {
+      display: flex;
+      gap: 24px;
+    }
+    .nav a {
+      color: #4A4643;
+      text-decoration: none;
+    }
+    .nav a.active {
+      color: #D97706;
+      font-weight: 600;
+    }
+
+    /* PROPOSAL C SPECIFIC STYLES */
+    .intro-wrapper {
+      background: #FBF3E7;
+      padding: 60px 0 80px 0;
+      position: relative;
+    }
+    .intro-content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 80px;
+    }
+    .intro-content h1 {
+      font-size: 36px;
+      font-weight: bold;
+      color: #2B180A;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .intro-content h2 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #317E6D;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .intro-content p {
+      color: #4A4643;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    /* Wave Divider */
+    .wave-divider {
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+    }
+    .wave-divider svg {
+      position: relative;
+      display: block;
+      width: calc(100% + 1.3px);
+      height: 80px;
+    }
+    .wave-divider .shape-fill {
+      fill: #F5F5F0;
+    }
+
+    .tool-section {
+      background: #F5F5F0;
+      padding: 50px 40px 60px 40px;
+    }
+
+    .journey-box {
+      background: white;
+      max-width: 1000px;
+      margin: 0 auto 40px auto;
+      padding: 28px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+      border-left: 5px solid #317E6D;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .journey-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #E0F2EF 0%, #C5E7E0 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+    .journey-text h3 {
+      font-weight: bold;
+      color: #2B180A;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+    .journey-text p {
+      color: #4A4643;
+      font-size: 15px;
+    }
+
+    .worldviews-container {
+      background: white;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 36px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    }
+    .worldviews-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .worldviews-header h3 {
+      font-weight: bold;
+      color: #2B180A;
+      font-size: 18px;
+    }
+    .badge {
+      background: #317E6D;
+      color: white;
+      border-radius: 14px;
+      padding: 4px 10px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .worldview-card {
+      background: #FEFDFB;
+      border: 2px solid #E5D5C3;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .worldview-card:hover {
+      border-color: #317E6D;
+      box-shadow: 0 3px 12px rgba(49, 126, 109, 0.15);
+      transform: translateY(-1px);
+    }
+    .worldview-card.selected {
+      border-color: #4A90E2;
+      background: #F8FBFF;
+      border-width: 3px;
+    }
+    .worldview-info h4 {
+      font-weight: bold;
+      color: #2B180A;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+    .worldview-info p {
+      color: #4A4643;
+      font-size: 14px;
+    }
+    .info-icon {
+      width: 36px;
+      height: 36px;
+      background: #E5D5C3;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .notes {
+      margin-top: 40px;
+      padding: 24px;
+      background: #FFF4E6;
+      border-radius: 12px;
+      border-left: 5px solid #FF9800;
+    }
+    .notes h3 {
+      font-weight: bold;
+      color: #2B180A;
+      margin-bottom: 12px;
+    }
+    .notes ul {
+      margin-left: 24px;
+      color: #4A4643;
+      line-height: 2;
+    }
+    .notes strong {
+      color: #E65100;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">
+      <h1>🌊 Proposal C: Full-Width + Wave Divider</h1>
+      <p>Edge-to-edge intro with curved wave transition</p>
+    </div>
+
+    <div class="mockup-frame">
+      <!-- Header -->
+      <div class="header">
+        <div class="logo">Psychedelic Safety Institute</div>
+        <div class="nav">
+          <a href="#" class="active">Theory of Change Explorer</a>
+          <a href="#">Strategic Elements</a>
+          <a href="#">Ecosystem Map</a>
+        </div>
+      </div>
+
+      <!-- Full-Width Intro Section -->
+      <div class="intro-wrapper">
+        <div class="intro-content">
+          <h1>Theory of Change Explorer</h1>
+          <h2>Supporting the Health of the Psychedelic Field and Users</h2>
+          <p>
+            Over two years, we engaged with stakeholders across the psychedelic ecosystem through 138 in-depth
+            interviews, a national summit, and extensive field research to understand the challenges facing public
+            health and safety. Through this collaborative process, we identified core strategic and coordination
+            challenges that no single organization can solve alone.
+          </p>
+          <p>
+            This tool maps connections between different worldviews, outcomes, problems, and projects to help you
+            understand how your work fits into the broader ecosystem and discover potential collaboration opportunities.
+            This is a first iteration built from what the field told us was needed. All organizational and project
+            information comes from publicly available sources or direct submissions. Organizations can claim and edit
+            their profiles at any time.
+          </p>
+        </div>
+
+        <!-- Wave SVG Divider -->
+        <div class="wave-divider">
+          <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,50 C300,10 600,90 900,50 C1050,25 1150,50 1200,50 L1200,120 L0,120 Z" class="shape-fill"></path>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Tool Section -->
+      <div class="tool-section">
+        <!-- Journey Box with Elevation -->
+        <div class="journey-box">
+          <div class="journey-icon">👁️</div>
+          <div class="journey-text">
+            <h3>Start Your Journey</h3>
+            <p>Select a worldview below to explore relevant outcomes, problems, and projects</p>
+          </div>
+        </div>
+
+        <!-- Worldviews with Card Container -->
+        <div class="worldviews-container">
+          <div class="worldviews-header">
+            <span style="font-size: 22px;">👁️</span>
+            <h3>WORLDVIEWS</h3>
+            <span class="badge">7</span>
+          </div>
+
+          <div class="worldview-card selected">
+            <div class="worldview-info">
+              <h4>Medical Integration Orientation</h4>
+              <p>Make psychedelics prescription medicines</p>
+            </div>
+            <div class="info-icon" style="background: #A8D5E2;">ℹ️</div>
+          </div>
+
+          <div class="worldview-card">
+            <div class="worldview-info">
+              <h4>Pragmatic Policy Reform Orientation</h4>
+              <p>Build coalitions for policy reform</p>
+            </div>
+            <div class="info-icon">ℹ️</div>
+          </div>
+
+          <div class="worldview-card">
+            <div class="worldview-info">
+              <h4>Abolitionist Justice Orientation</h4>
+              <p>Challenge extraction and oppression through grassroots transformation</p>
+            </div>
+            <div class="info-icon">ℹ️</div>
+          </div>
+
+          <div class="worldview-card">
+            <div class="worldview-info">
+              <h4>Traditional/Indigenous Orientation</h4>
+              <p>Uphold indigenous sovereignty in psychedelic practice</p>
+            </div>
+            <div class="info-icon">ℹ️</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notes">
+      <h3>✨ Key Features of Proposal C:</h3>
+      <ul>
+        <li>Beige intro section is <strong>full-width</strong> (edge-to-edge)</li>
+        <li>Content is <strong>centered with max-width</strong> for optimal readability</li>
+        <li><strong>Curved wave SVG divider</strong> creates organic, flowing transition</li>
+        <li>Tool section has <strong>subtle different background</strong> (#F5F5F0 vs white)</li>
+        <li>Cards and boxes have <strong>elevation/shadows</strong> for depth</li>
+        <li>Worldviews contained in <strong>unified white card</strong> for cohesion</li>
+        <li><strong>More modern, polished</strong> aesthetic</li>
+        <li>Creates stronger visual statement</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
