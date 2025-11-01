@@ -1,8 +1,8 @@
 /* V2 Visual Enhancements for Theory of Change Explorer */
 
-/* 0. Override main section background to gray for better contrast */
+/* 0. Override main section background to beige for consistent color scheme */
 section.min-h-screen {
-  background-color: #F5F5F0 !important;
+  background-color: #FBF3E7 !important;
 }
 
 /* 1. Start Your Journey Box - Overlap Effect with Negative Margin */

@@ -91,7 +91,7 @@ This framework emerged from asking stakeholders: What does success look like to 
   const calloutText = `7 worldviews, 48 problems, 38 outcomes—all field-validated. These aren't boxes—they're tools for finding allies and coordination opportunities. Built from systematic analysis of 172 stakeholders across 13 dimensions. Shape them with us.`;
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F5F5F0' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#FBF3E7' }}>
       <PSIHeader />
       <ToolIntroductionV3
         title="Strategic Elements Explorer"
