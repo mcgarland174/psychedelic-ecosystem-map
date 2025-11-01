@@ -111,16 +111,13 @@ This framework emerged from asking stakeholders: What does success look like to 
       {/* Tool Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div
-          className="rounded-2xl shadow-xl overflow-hidden"
+          className="shadow-lg overflow-hidden"
           style={{
             backgroundColor: '#FFFFFF',
-            border: '2px solid #E6C8A1',
-            boxShadow: '0 10px 25px -5px rgba(49, 126, 109, 0.15), 0 8px 10px -6px rgba(49, 126, 109, 0.1)'
+            borderTop: '4px solid #317E6D',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)'
           }}
         >
-          {/* Decorative Top Bar */}
-          <div className="h-1.5 bg-gradient-to-r from-teal-600 to-teal-500" />
-
           <FrameworkExplorer
             worldviews={data.worldviews}
             outcomes={data.outcomes}
